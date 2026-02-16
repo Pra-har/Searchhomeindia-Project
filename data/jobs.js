@@ -1,0 +1,73 @@
+﻿export const careerData = [
+  {
+    title: "Junior Graphic Designer (Web)",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInLeft",
+  },
+  {
+    title: "Finance Manager & Health",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInRight",
+  },
+  {
+    title: "Group Marketing Manager",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInLeft",
+  },
+  {
+    title: "Product Sales Specialist",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInRight",
+  },
+  {
+    title: "Web Developer",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInLeft",
+  },
+  {
+    title: "Software Engineer",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInRight",
+  },
+  {
+    title: "Junior Graphic Designer (Web)",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInLeft",
+  },
+  {
+    title: "UX/UI Designer Web",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInRight",
+  },
+  {
+    title: "Full Stack Engineer",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInLeft",
+  },
+  {
+    title: "Product Manager, Studio",
+    department: "Marketing",
+    location: "Bangalore",
+    salary: "$850",
+    animation: "fadeInRight",
+  },
+];
+

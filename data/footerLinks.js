@@ -1,0 +1,55 @@
+export const footerData = [
+  {
+    title: "COMPANY",
+    links: [
+      { text: "About Us", href: "/about" },
+      { text: "Careers", href: "/career" },
+      { text: "Services", href: "/service-details" },
+      { text: "Media Coverage", href: "#" },
+      { text: "Contact Us", href: "/contact" },
+      { text: "Terms & Conditions", href: "#" },
+      { text: "Policy of Use", href: "#" },
+      { text: "Fraud Identification", href: "#" },
+    ],
+    className: "style-2",
+  },
+  {
+    title: "NETWORK SITES",
+    links: [
+      { text: "Search Homes India Mumbai", href: "#" },
+      { text: "Search Homes India Delhi", href: "#" },
+      { text: "Search Homes India Bangalore", href: "#" },
+      { text: "Search Homes India Hyderabad", href: "#" },
+      { text: "Search Homes India Chennai", href: "#" },
+      { text: "Urban Money India", href: "#" },
+      { text: "Interior Company India", href: "#" },
+      { text: "SuperAgent Pro", href: "#" },
+    ],
+  },
+  {
+    title: "SOLUTIONS",
+    links: [
+      { text: "Search Connect", href: "#" },
+      { text: "Prime Connect", href: "#" },
+      { text: "Rent Agreement", href: "#" },
+      { text: "Escrow", href: "#" },
+      { text: "Book Property Online", href: "#" },
+      { text: "PropVR", href: "#" },
+      { text: "PropsAMC", href: "#" },
+    ],
+    className: "style-2",
+  },
+  {
+    title: "RESOURCES",
+    links: [
+      { text: "Search Homes India Reviews", href: "#" },
+      { text: "Glossary", href: "#" },
+      { text: "Real Estate Forum", href: "#" },
+      { text: "Real Estate Guide", href: "#" },
+      { text: "Data Intelligence", href: "#" },
+      { text: "Women Home Buyers", href: "#" },
+      { text: "Blogs", href: "/blog-grid" },
+    ],
+    className: "style-2",
+  },
+];

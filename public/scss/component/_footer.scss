@@ -1,0 +1,306 @@
+@use "../abstracts/mixin";
+@use "../abstracts/variable";
+
+#footer {
+    background-color: var(--Secondary);
+    padding-top: 60px;
+    &.style-2 {
+        background-color: #161618;
+        .footer-menu-list ul li a {
+            background-color: #161618 !important;
+        }
+    }
+    .footer-top {
+        @include mixin.flex(center, space-between);
+        padding-bottom: 34px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        flex-wrap: wrap;
+        gap: 30px 20px;
+    }
+    .footer-main {
+        padding: 40px 0 22px;
+    }
+    .footer-about-block {
+        padding-top: 26px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        .title {
+            color: var(--Text-white);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .text-1 {
+                color: var(--Note);
+                font-size: 14px;
+                line-height: 22.4px;
+        }
+    }
+    .footer-info-grid {
+        display: grid;
+        grid-template-columns: 1.9fr 1fr 1.1fr;
+        gap: 36px;
+    }
+    .footer-app-links {
+        @include mixin.d-flex();
+        gap: 12px;
+        align-items: center;
+        a {
+            display: inline-flex;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        img {
+            width: 130px;
+            height: 40px;
+        }
+    }
+    .footer-connect {
+        display: grid;
+        gap: 8px;
+        .item {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+            .label {
+                color: var(--Note);
+                font-size: 14px;
+                line-height: 22.4px;
+            }
+            a {
+                color: var(--Note);
+                font-size: 14px;
+                line-height: 22.4px;
+                &:hover {
+                    color: var(--Primary);
+                }
+            }
+        }
+    }
+    .tf-social {
+        &.style-4 {
+            @include mixin.d-flex();
+            gap: 12px;
+            li {
+                a {
+                    @include mixin.flex(center, center);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 999px;
+                    background-color: var(--White);
+                    color: var(--Heading);
+                    border: none;
+                }
+            }
+        }
+    }
+    .footer-menu-list {
+        .title {
+            color: var(--Text-white);
+            margin-bottom: 10px;
+            font-size: 17px;
+        }
+
+        ul {
+            li {
+                &:not(:last-child) {
+                    margin-bottom: 15px;
+                }
+                a {
+                    font-size: 14px;
+                    line-height: 22.4px;
+                    color: var(--Note);
+                    position: relative;
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        width: 0;
+                        height: 1px;
+                        bottom: 0;
+                        background-color: var(--Primary);
+                        @include mixin.transition3();
+                    }
+                }
+               
+                &:hover {
+                    a {
+                        color: var(--Primary);
+                        &::before {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+
+         p {
+            font-size: 14px;
+            line-height: 22.4px;
+            color: var(--Note);
+            position: relative;
+            &::before {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 1px;
+                bottom: 0;
+                background-color: var(--Primary);
+                @include mixin.transition3();
+            }
+        }
+
+        &.style-2 {
+            ul {
+                li {
+                    a {
+                        padding-left: 20px;
+                        position: relative;
+                        background-color: var(--Secondary);
+                        @include mixin.transition3();
+                        z-index: 3;
+                        &::after {
+                            content: "\e909";
+                            position: absolute;
+                            font-family: variable.$fontIcon;
+                            font-size: 16px;
+                            color: var(--Primary);
+                            font-size: 12px;
+                            margin-right: 11px;
+                            left: 0;
+                            @include mixin.transition3();
+                            z-index: 1;
+                        }
+                    }
+                    &:hover {
+                        a {
+                            &::before {
+                                width: 87%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .footer-bottom {
+        @include mixin.flex(center, space-between);
+        padding: 24px 0 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        gap: 10px 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        p {
+            a {
+                color: var(--Text);
+                &:hover {
+                    color: var(--Primary);
+                }
+            }
+        }
+    }
+    .wrap-social {
+        gap: 16px;
+    }
+    .footer-logo {
+        img {
+            width: 180px;
+        }
+    }
+}
+.wrap-contact-item {
+    @include mixin.d-flex();
+    gap: 20px 48px;
+    flex-wrap: wrap;
+    .contact-item {
+        @include mixin.d-flex();
+        gap: 33px;
+        i {
+            font-size: 48px;
+            color: var(--Primary);
+        }
+        svg path {
+            stroke: var(--Primary);
+        }
+        .content {
+            position: relative;
+            .title {
+                color: var(--Note);
+                margin-bottom: 4px !important;
+            }
+            h6 {
+                a {
+                    color: var(--Text-white);
+                    &:hover {
+                        color: var(--Primary);
+                    }
+                }
+            }
+            &::after {
+                content: "";
+                position: absolute;
+                width: 1px;
+                height: 51px;
+                background-color: rgba(255, 255, 255, 0.07);
+                top: 0;
+                left: -18px;
+            }
+        }
+    }
+}
+.footer-col-block {
+    .title-mobile {
+        display: none;
+        position: relative;
+        &::after {
+            position: absolute;
+            content: "";
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 1px;
+            background-color: var(--White);
+            transition: 0.25s ease-in-out;
+        }
+        &::before {
+            position: absolute;
+            content: "";
+            right: 15px;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1px;
+            height: 12px;
+            background-color: var(--White);
+            transition: 0.25s ease-in-out;
+        }
+    }
+    &.open {
+        .title-mobile {
+            &::before {
+                opacity: 0;
+            }
+            &::after {
+                transform: translate(0%, -50%) rotate(-180deg);
+            }
+        }
+    }
+}
+
+@media (max-width: 1199px) {
+    #footer {
+        .footer-info-grid {
+            grid-template-columns: 1fr 1fr;
+            .about-col {
+                grid-column: 1 / -1;
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    #footer {
+        .footer-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}
