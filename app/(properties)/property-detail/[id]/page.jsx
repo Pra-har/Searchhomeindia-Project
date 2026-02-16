@@ -2,8 +2,9 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Breadcumb from "@/components/common/Breadcumb";
 import Details from "@/components/propertyDetail/Details";
-// import RelatedProperties from "@/components/propertyDetail/RelatedProperties";
+import RelatedProperties from "@/components/propertyDetail/RelatedProperties";
 import PropertyMainSlider from "@/components/propertyDetail/PropertyMainSlider";
+import PropertyQuickNav from "@/components/propertyDetail/PropertyQuickNav";
 import React from "react";
 import { allProperties } from "@/data/properties";
 
@@ -124,8 +125,9 @@ export default async function page({ params }) {
         <Breadcumb pageName="Property Details" />
         <div className="main-content">
           <PropertyMainSlider property={property} />
+          <PropertyQuickNav />
           <Details property={property} />
-          {/* <RelatedProperties /> */}
+          <RelatedProperties />
         </div>
         <script
           type="application/ld+json"

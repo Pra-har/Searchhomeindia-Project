@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import { useMemo, useState } from "react";
+
+const DEFAULT_VISIBLE_CONNECTIVITY = 6;
 
 const firstFilled = (...values) => {
   for (const value of values) {
@@ -27,6 +31,10 @@ const fallbackConnectivity = [
   { id: "conn-4", place: "Sakra World Hospital", distance: "7.2 km", time: "16 min", type: "Hospital" },
   { id: "conn-5", place: "Nexus Shantiniketan Mall", distance: "6.1 km", time: "14 min", type: "Mall" },
   { id: "conn-6", place: "ORR - Marathahalli Junction", distance: "8.3 km", time: "20 min", type: "Road Link" },
+  { id: "conn-7", place: "National Highway 75 Access", distance: "4.9 km", time: "11 min", type: "Road Link" },
+  { id: "conn-8", place: "Vydehi Institute of Medical Sciences", distance: "7.8 km", time: "18 min", type: "Hospital" },
+  { id: "conn-9", place: "Forum Shantiniketan", distance: "6.4 km", time: "15 min", type: "Mall" },
+  { id: "conn-10", place: "KR Puram Railway Station", distance: "9.1 km", time: "23 min", type: "Railway" },
 ];
 
 const iconByType = (type = "") => {
@@ -52,9 +60,9 @@ const toneByType = (type = "") => {
 };
 
 const normalizeConnectivity = (raw) => {
-  if (!Array.isArray(raw) || raw.length === 0) return fallbackConnectivity;
+  const source = Array.isArray(raw) && raw.length ? raw : fallbackConnectivity;
 
-  const normalized = raw
+  const normalized = source
     .map((entry, index) => {
       if (typeof entry === "string") {
         const place = entry.trim();
@@ -85,7 +93,13 @@ const normalizeConnectivity = (raw) => {
     })
     .filter(Boolean);
 
-  return normalized.length ? normalized : fallbackConnectivity;
+  const seen = new Set();
+  return normalized.filter((item) => {
+    const key = `${item.place.toLowerCase()}|${item.type.toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 };
 
 export default function ProjectConnectivity({ property }) {
@@ -94,7 +108,24 @@ export default function ProjectConnectivity({ property }) {
     property?.projectDetails?.connectivity,
     property?.connectivity
   );
-  const items = normalizeConnectivity(source);
+  const items = useMemo(() => normalizeConnectivity(source), [source]);
+  const typeFilters = useMemo(
+    () => ["All", ...Array.from(new Set(items.map((item) => item.type).filter(Boolean)))],
+    [items]
+  );
+
+  const [activeType, setActiveType] = useState("All");
+  const [showAll, setShowAll] = useState(false);
+
+  const filteredItems = useMemo(
+    () => (activeType === "All" ? items : items.filter((item) => item.type === activeType)),
+    [items, activeType]
+  );
+  const visibleItems = showAll
+    ? filteredItems
+    : filteredItems.slice(0, DEFAULT_VISIBLE_CONNECTIVITY);
+  const hasMore = filteredItems.length > DEFAULT_VISIBLE_CONNECTIVITY;
+  const remainingCount = Math.max(0, filteredItems.length - DEFAULT_VISIBLE_CONNECTIVITY);
 
   return (
     <section className="project-connectivity" aria-labelledby="project-connectivity-heading">
@@ -105,8 +136,28 @@ export default function ProjectConnectivity({ property }) {
         <p>Distance and travel time to key city touchpoints.</p>
       </div>
 
+      {typeFilters.length > 1 && (
+        <div className="project-connectivity-filters" role="tablist" aria-label="Connectivity category filters">
+          {typeFilters.map((type) => (
+            <button
+              type="button"
+              key={`connectivity-filter-${type}`}
+              className={`connectivity-filter-chip${activeType === type ? " active" : ""}`}
+              onClick={() => {
+                setActiveType(type);
+                setShowAll(false);
+              }}
+              role="tab"
+              aria-selected={activeType === type}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="project-connectivity-grid" role="list" aria-label="Project connectivity list">
-        {items.map((item) => (
+        {visibleItems.map((item) => (
           <article
             className={`project-connectivity-card tone-${toneByType(item.type)}`}
             role="listitem"
@@ -126,6 +177,19 @@ export default function ProjectConnectivity({ property }) {
           </article>
         ))}
       </div>
+
+      {hasMore && (
+        <div className="project-connectivity-actions">
+          <button
+            type="button"
+            className="project-connectivity-toggle"
+            onClick={() => setShowAll((prev) => !prev)}
+            aria-expanded={showAll}
+          >
+            {showAll ? "Show Less" : `Show ${remainingCount} More`}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

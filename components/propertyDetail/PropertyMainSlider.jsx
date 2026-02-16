@@ -312,6 +312,16 @@ export default function PropertyMainSlider({ property }) {
     setTimeout(updateLightboxTabsScrollState, 50);
   };
 
+  useEffect(() => {
+    const openFromQuickNav = (event) => {
+      const requestedIndex = toNumber(event?.detail?.index, mainItem.absoluteIndex);
+      openLightbox(requestedIndex);
+    };
+
+    window.addEventListener("openPropertyHeroLightbox", openFromQuickNav);
+    return () => window.removeEventListener("openPropertyHeroLightbox", openFromQuickNav);
+  }, [mainItem.absoluteIndex, lightboxMedia.length]);
+
   const prevBanner = () => {
     setActiveIndex((prev) => (prev === 0 ? heroMedia.length - 1 : prev - 1));
   };

@@ -65,6 +65,7 @@ export default function ExtraInfo({ property }) {
     {
       id: "statusType",
       label: "Status",
+      icon: "icon-settings",
       value: toDisplayValue(
         property?.statusType ?? property?.status ?? detailsSource.statusType,
         "Ongoing"
@@ -73,16 +74,19 @@ export default function ExtraInfo({ property }) {
     {
       id: "propertyType",
       label: "Type",
+      icon: "icon-home",
       value: propertyType,
     },
     {
       id: "parking",
       label: "Parking",
+      icon: "icon-Garage-1",
       value: toDisplayValue(property?.parking ?? detailsSource.parking, "Yes"),
     },
     {
       id: "totalFloors",
       label: "Floors",
+      icon: "icon-HouseLine",
       value: toDisplayValue(
         property?.totalFloors ?? property?.floors ?? detailsSource.totalFloors,
         "G+2 & G+3 Villas Floors"
@@ -91,6 +95,7 @@ export default function ExtraInfo({ property }) {
     {
       id: "projectReraId",
       label: "RERA",
+      icon: "icon-file",
       value: reraValue,
       isLong: true,
     },
@@ -100,16 +105,19 @@ export default function ExtraInfo({ property }) {
     {
       id: "configurations",
       label: "Configurations",
+      icon: "icon-HouseLine",
       value: configurationsValue,
     },
     {
       id: "bedsBaths",
       label: "BHK / Baths",
+      icon: "icon-Bed-2",
       value: `${beds} Beds - ${baths} Baths`,
     },
     {
       id: "sbaPlotSize",
       label: "SBA/Plot Size",
+      icon: "icon-Ruler",
       value: toDisplayValue(
         property?.sbaPlotSize ?? property?.plotSize ?? detailsSource.sbaPlotSize,
         "On Request"
@@ -118,11 +126,13 @@ export default function ExtraInfo({ property }) {
     {
       id: "builtupArea",
       label: "Built-up Area",
+      icon: "icon-Crop",
       value: builtupArea,
     },
     {
       id: "facingType",
       label: "Facing",
+      icon: "icon-location-2",
       value: toDisplayValue(
         property?.facing ?? detailsSource.facing,
         "East Facing"
@@ -131,6 +141,7 @@ export default function ExtraInfo({ property }) {
     {
       id: "totalUnits",
       label: "Total Units",
+      icon: "icon-office",
       value: toDisplayValue(
         property?.totalUnits ?? detailsSource.totalUnits,
         "250 Units"
@@ -139,6 +150,7 @@ export default function ExtraInfo({ property }) {
     {
       id: "developmentArea",
       label: "Development Area",
+      icon: "icon-location",
       value: toDisplayValue(
         property?.developmentArea ?? detailsSource.developmentArea,
         "16 Acres"
@@ -147,6 +159,7 @@ export default function ExtraInfo({ property }) {
     {
       id: "possessionDate",
       label: "Possession Date",
+      icon: "icon-Hammer",
       value: toDisplayValue(
         property?.possessionDate ?? detailsSource.possessionDate,
         "2029"
@@ -171,6 +184,7 @@ export default function ExtraInfo({ property }) {
             className={`glance-pill${item.isLong ? " is-long" : ""}`}
             key={item.id}
           >
+            {item.icon ? <i className={item.icon} aria-hidden="true" /> : null}
             <strong>{item.label}:</strong> {item.value}
           </span>
         ))}
@@ -179,7 +193,14 @@ export default function ExtraInfo({ property }) {
       <div className="property-spec-grid" aria-label="Property specifications">
         {specifications.map((item) => (
           <article className="property-spec-item" key={item.id}>
-            <p className="spec-label">{item.label}</p>
+            <p className="spec-label">
+              {item.icon ? (
+                <span className="spec-icon" aria-hidden="true">
+                  <i className={item.icon} />
+                </span>
+              ) : null}
+              {item.label}
+            </p>
             <p className="spec-value">{item.value}</p>
           </article>
         ))}

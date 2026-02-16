@@ -1,22 +1,33 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
 
-export default function Sidebar() {
+export default function Sidebar({ property }) {
+  const projectName = property?.title || "this property";
+
   return (
     <div className="tf-sidebar sticky-sidebar">
-         <form className="form-contact-agent" onSubmit={(e) => e.preventDefault()}>
-        <h4 className="heading-title mb-30">More About This Property</h4>
+      <form className="form-contact-agent property-inquiry-form" onSubmit={(e) => e.preventDefault()}>
+        <div className="sidebar-form-head">
+          <h4 className="heading-title">Get Full Details</h4>
+          <p>
+            Fill your details and our property expert will call you back for{" "}
+            <strong>{projectName}</strong>.
+          </p>
+        </div>
+
         <fieldset>
           <input
             type="text"
             className="form-control"
-            placeholder="Your name"
+            placeholder="Your Name"
             name="name"
             id="name2"
             required
           />
         </fieldset>
+
         <fieldset>
           <input
             type="text"
@@ -27,29 +38,42 @@ export default function Sidebar() {
             required
           />
         </fieldset>
+
         <fieldset className="phone">
           <input
             type="text"
             className="form-control"
-            placeholder="Phone"
+            placeholder="Mobile Number"
             name="phone"
             id="phone"
             required
           />
         </fieldset>
+
         <fieldset>
           <textarea
             name="message"
             cols={30}
             rows={10}
-            placeholder="Message"
+            placeholder="Tell us your requirement"
             id="message3"
             required
             defaultValue={""}
           />
         </fieldset>
+
+        <fieldset className="consent-fieldset">
+          <label className="consent-label" htmlFor="consent-sidebar">
+            <input type="checkbox" id="consent-sidebar" name="consent" required />
+            <span>
+              I agree to the Privacy Policy and authorize Search Homes India to contact me via
+              phone call, SMS, WhatsApp, and email.
+            </span>
+          </label>
+        </fieldset>
+
         <div className="wrap-btn">
-          <a href="#" className="tf-btn bg-color-primary fw-6 w-full">
+          <button type="submit" className="tf-btn bg-color-primary fw-6 w-full">
             <svg
               width={20}
               height={20}
@@ -65,11 +89,12 @@ export default function Sidebar() {
                 strokeLinejoin="round"
               />
             </svg>
-            Email agent
-          </a>
+            Request Callback
+          </button>
         </div>
       </form>
-      <div className="sidebar-ads mb-30">
+
+      <div className="sidebar-ads">
         <div className="image-wrap">
           <Image
             className="lazyload"
@@ -81,12 +106,7 @@ export default function Sidebar() {
           />
         </div>
         <div className="logo relative z-5">
-          <Image
-            alt=""
-            src="/images/logo/shi_logo_white.png"
-            width={272}
-            height={85}
-          />
+          <Image alt="" src="/images/logo/shi_logo_white.png" width={272} height={85} />
         </div>
         <div className="box-ads relative z-5">
           <div className="content">
@@ -95,17 +115,16 @@ export default function Sidebar() {
             </h4>
             <div className="text-addres">
               <p>
-                Connect with a trusted agent who knows the market inside out -
-                whether youâ€™re buying or selling.
+                Connect with a trusted agent who knows the market inside out, whether you are buying
+                or selling.
               </p>
             </div>
           </div>
-          <a href="#" className="tf-btn fw-6 bg-color-primary fw-6 w-full">
+          <a href="#" className="tf-btn fw-6 bg-color-primary w-full">
             Connect with an agent
           </a>
         </div>
       </div>
-   
     </div>
   );
 }

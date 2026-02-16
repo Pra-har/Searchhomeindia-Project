@@ -1,4 +1,21 @@
-import React from "react";
+"use client";
+
+import { useMemo, useState } from "react";
+
+const DEFAULT_VISIBLE_POINTS = 10;
+
+const FALLBACK_POINTS = [
+  "Prime location in Kharghar, Navi Mumbai - a well-developed and rapidly growing suburb.",
+  "Spacious and thoughtfully designed 2 & 3 BHK luxury residences.",
+  "High-end security systems with 24/7 surveillance.",
+  "Excellent connectivity to major highways, railway networks, and upcoming Navi Mumbai International Airport.",
+  "Close proximity to reputed schools, colleges, and leading healthcare centres.",
+  "Modern lifestyle amenities including a gymnasium, swimming pool, and recreational spaces.",
+  "State-of-the-art 50,000 sq.ft. clubhouse with curated leisure and social spaces.",
+  "Eco-conscious planning with expansive landscaped open areas.",
+  "Well-planned internal infrastructure for comfortable and seamless daily living.",
+  "EOI Benefits up to ₹40 Lakhs* | EOI Starts from ₹2 Lakhs*",
+];
 
 const firstFilled = (...values) => {
   for (const value of values) {
@@ -9,126 +26,68 @@ const firstFilled = (...values) => {
   return undefined;
 };
 
-const toText = (value, fallback = "-") => {
-  if (value === undefined || value === null) return fallback;
-  if (Array.isArray(value)) {
-    const parsed = value
-      .map((item) => toText(item, ""))
+const cleanPoint = (value) => {
+  if (typeof value !== "string") return "";
+  return value.replace(/^\s*[→•\-]+\s*/g, "").trim();
+};
+
+const normalizeHighlightPoints = (raw) => {
+  let base = [];
+
+  if (Array.isArray(raw)) {
+    base = raw;
+  } else if (typeof raw === "string") {
+    base = raw
+      .split(/\r?\n+/)
+      .map((line) => line.trim())
       .filter(Boolean);
-    return parsed.length ? parsed.join(", ") : fallback;
   }
-  if (typeof value === "object") {
-    if (value?.label) return String(value.label);
-    if (value?.name) return String(value.name);
-    return fallback;
-  }
-  const parsed = String(value).trim();
-  return parsed || fallback;
-};
 
-const formatInrCompact = (rawValue) => {
-  const value = Number(String(rawValue ?? "").replace(/[^0-9.]/g, ""));
-  if (!Number.isFinite(value) || value <= 0) return "";
-  const normalized = value < 100000 ? value * 1000 : value;
-  if (normalized >= 10000000) return `₹ ${(normalized / 10000000).toFixed(2)} Cr`;
-  if (normalized >= 100000) return `₹ ${(normalized / 100000).toFixed(2)} L`;
-  return `₹ ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(normalized)}`;
-};
-
-const fallbackHighlights = (property) => {
-  const details = property?.projectDetails || {};
-  const beds = toText(firstFilled(property?.beds, details?.beds), "3");
-  const configs = toText(
-    firstFilled(
-      property?.configurations,
-      property?.configuration,
-      details?.configurations,
-      details?.configuration
-    ),
-    `${beds} BHK`
-  );
-  const price = formatInrCompact(firstFilled(property?.price, details?.startingPrice));
-
-  return [
-    {
-      id: "highlight-config",
-      title: "Configurations",
-      value: configs,
-      iconClass: "icon-apartment-2",
-      tone: "blue",
-    },
-    {
-      id: "highlight-possession",
-      title: "Possession",
-      value: toText(firstFilled(property?.possessionDate, details?.possessionDate), "2029"),
-      iconClass: "icon-clock",
-      tone: "purple",
-    },
-    {
-      id: "highlight-area",
-      title: "Development Area",
-      value: toText(firstFilled(property?.developmentArea, details?.developmentArea), "16 Acres"),
-      iconClass: "icon-sky-garden",
-      tone: "green",
-    },
-    {
-      id: "highlight-units",
-      title: "Total Units",
-      value: toText(firstFilled(property?.totalUnits, details?.totalUnits), "980 Units"),
-      iconClass: "icon-home",
-      tone: "orange",
-    },
-    {
-      id: "highlight-rera",
-      title: "RERA",
-      value: toText(firstFilled(property?.projectReraId, property?.reraId, details?.projectReraId), "PRM/KA/RERA/1250/304/PR/090126/008393"),
-      iconClass: "icon-shield",
-      tone: "red",
-    },
-    {
-      id: "highlight-price",
-      title: "Starting Price",
-      value: price || "₹ 1.17 Cr Onwards",
-      iconClass: "icon-money",
-      tone: "teal",
-    },
-  ];
-};
-
-const normalizeHighlights = (raw, property) => {
-  if (!Array.isArray(raw) || raw.length === 0) return fallbackHighlights(property);
-
-  const normalized = raw
+  const normalized = base
     .map((entry, index) => {
       if (typeof entry === "string") {
-        const title = entry.trim();
-        if (!title) return null;
+        const text = cleanPoint(entry);
+        if (!text) return null;
         return {
-          id: `highlight-${index + 1}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
-          title,
-          value: "",
+          id: `highlight-point-${index + 1}-${text
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")}`,
+          text,
           iconClass: "icon-check",
-          tone: "blue",
+          tag: "",
         };
       }
-      if (!entry || typeof entry !== "object") return null;
 
-      const title = toText(firstFilled(entry.title, entry.label, entry.name), "");
-      if (!title) return null;
+      if (!entry || typeof entry !== "object") return null;
+      const pointText = cleanPoint(
+        firstFilled(entry.point, entry.text, entry.description, entry.title) || ""
+      );
+      if (!pointText) return null;
 
       return {
-        id: `highlight-${toText(firstFilled(entry.id, entry.slug, title), title)
+        id: `highlight-point-${String(firstFilled(entry.id, entry.slug, index + 1))
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")}-${index + 1}`,
-        title,
-        value: toText(entry.value, ""),
-        iconClass: toText(firstFilled(entry.iconClass, entry.icon), "icon-check"),
-        tone: toText(entry.tone, "blue").toLowerCase(),
+          .replace(/[^a-z0-9]+/g, "-")}`,
+        text: pointText,
+        iconClass:
+          typeof firstFilled(entry.iconClass, entry.icon) === "string"
+            ? firstFilled(entry.iconClass, entry.icon)
+            : "icon-check",
+        tag:
+          typeof firstFilled(entry.tag, entry.category, entry.type) === "string"
+            ? firstFilled(entry.tag, entry.category, entry.type)
+            : "",
       };
     })
     .filter(Boolean);
 
-  return normalized.length ? normalized : fallbackHighlights(property);
+  const seen = new Set();
+  return normalized.filter((item) => {
+    const key = item.text.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 };
 
 export default function ProjectHighlights({ property }) {
@@ -137,7 +96,16 @@ export default function ProjectHighlights({ property }) {
     property?.projectDetails?.highlights,
     property?.highlights
   );
-  const highlights = normalizeHighlights(source, property);
+
+  const points = useMemo(() => {
+    const parsed = normalizeHighlightPoints(source);
+    return parsed.length ? parsed : normalizeHighlightPoints(FALLBACK_POINTS);
+  }, [source]);
+
+  const [showAll, setShowAll] = useState(false);
+  const visiblePoints = showAll ? points : points.slice(0, DEFAULT_VISIBLE_POINTS);
+  const hasMore = points.length > DEFAULT_VISIBLE_POINTS;
+  const remainingCount = Math.max(0, points.length - DEFAULT_VISIBLE_POINTS);
 
   return (
     <section className="project-highlights" aria-labelledby="project-highlights-heading">
@@ -145,26 +113,35 @@ export default function ProjectHighlights({ property }) {
         <h2 id="project-highlights-heading" className="wg-title text-11 fw-6 text-color-heading">
           Project Highlights
         </h2>
-        <p>Quick facts and key USP points for this project.</p>
+        <p>Key points that define project quality, location advantage, and lifestyle value.</p>
       </div>
 
-      <div className="project-highlights-grid" role="list" aria-label="Project highlights list">
-        {highlights.map((item) => (
-          <article
-            className={`project-highlight-card tone-${item.tone || "blue"}`}
-            role="listitem"
-            key={item.id}
-          >
-            <div className="highlight-icon" aria-hidden="true">
-              <i className={item.iconClass} />
-            </div>
-            <div className="highlight-content">
-              <p className="highlight-title">{item.title}</p>
-              {item.value ? <p className="highlight-value">{item.value}</p> : null}
+      <div className="project-highlights-points" role="list" aria-label="Project highlights points">
+        {visiblePoints.map((point) => (
+          <article className="highlight-point-card" role="listitem" key={point.id}>
+            <span className="point-icon" aria-hidden="true">
+              <i className={point.iconClass || "icon-check"} />
+            </span>
+            <div className="point-content">
+              <p className="point-text">{point.text}</p>
+              {point.tag ? <span className="point-tag">{point.tag}</span> : null}
             </div>
           </article>
         ))}
       </div>
+
+      {hasMore && (
+        <div className="project-highlights-actions">
+          <button
+            type="button"
+            className="project-highlights-toggle"
+            onClick={() => setShowAll((prev) => !prev)}
+            aria-expanded={showAll}
+          >
+            {showAll ? "Show Less" : `Show ${remainingCount} More`}
+          </button>
+        </div>
+      )}
     </section>
   );
 }
