@@ -9,6 +9,7 @@ import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
 import SearchForm from "@/components/common/SearchForm";
 import CityDropdown from "@/components/common/CityDropdown";
+import MobileBottomNav from "@/components/navigation/MobileBottomNav";
 import {
   CITY_CHANGE_EVENT,
   CITY_OPTIONS,
@@ -684,7 +685,7 @@ export default function Header({ parentClass = "" }) {
         <header
           className={`header style-4 header-global-sticky${
             isHomeRoute ? " home-swap" : " always-visible"
-          }${showStickyGlobal ? " is-visible" : " is-hidden"}`}
+          }${isHomeRoute ? (showStickyGlobal ? " is-visible" : " is-hidden") : " is-visible"}`}
         >
           <div className="header-inner">
             <div className="tf-container xl">
@@ -766,6 +767,8 @@ export default function Header({ parentClass = "" }) {
           </div>
         </header>
       </div>
+      {!isHomeRoute ? <div className="header-global-spacer" aria-hidden="true" /> : null}
+      <MobileBottomNav />
 
       <HeaderMobileSearchOffcanvas
         activeCitySlug={selectedCitySlug}

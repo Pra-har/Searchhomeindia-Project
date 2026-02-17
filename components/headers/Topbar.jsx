@@ -11,13 +11,13 @@ export default function Topbar() {
                 <li>
                   <i className="icon-phone-1" />
                   <p>
-                    Phone: <span className="fw-7">8147267372</span>
+                    Phone: <a href="tel:+918147267372">8147267372</a>
                   </p>
                 </li>
                 <li>
                   <i className="icon-mail" />
                   <p>
-                    Email: <a href="#">contact@shi.com</a>
+                    Email: <a href="mailto:contact@shi.com">info@searchhomesindia.com</a>
                   </p>
                 </li>
               </ul>

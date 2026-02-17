@@ -2653,9 +2653,16 @@
 }
 
 .header-system .header-global-sticky.always-visible {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 9950;
+  background-color: #fff;
+}
+
+.header-global-spacer {
+  height: 56px;
 }
 
 .header-system .header-global-wrap {
@@ -3108,6 +3115,93 @@
 @media (max-width: 575px) {
   .header-side-offcanvas {
     width: 100vw !important;
+  }
+}
+
+/* mobile homepage bottom navigation */
+.mobile-home-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .header-global-spacer {
+    height: 42px;
+  }
+
+  body.has-mobile-home-bottom-nav {
+    padding-bottom: 82px;
+  }
+
+  .mobile-home-bottom-nav {
+    position: fixed;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    z-index: 9965;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: end;
+    gap: 4px;
+    height: 65px;
+    border: 1px solid #d9e5f2;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 28px rgba(19, 44, 85, 0.16);
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mobile-home-bottom-nav .nav-item {
+    border: 0;
+    background: transparent;
+    min-height: 48px;
+    border-radius: 12px;
+    color: #5f7087;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 11px;
+    line-height: 1.1;
+    font-weight: 600;
+    padding: 4px 6px;
+  }
+
+  .mobile-home-bottom-nav .nav-item i {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .mobile-home-bottom-nav .nav-item.is-home {
+    color: #1b6c9f;
+  }
+
+  .mobile-home-bottom-nav .nav-item-plus {
+    align-self: center;
+    justify-self: center;
+    min-height: 0;
+    padding: 0;
+    transform: translateY(-22px);
+  }
+
+  .mobile-home-bottom-nav .nav-item-plus .plus-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #1b6c9f, #2883bf);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    box-shadow: 0 8px 20px rgba(21, 89, 138, 0.32);
+    border: 4px solid #fff;
+  }
+
+  .mobile-home-bottom-nav .nav-item-plus .plus-circle i {
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 700;
   }
 }
 
@@ -3677,7 +3771,7 @@
 /* sticky sidebar on property listing */
 .section-property-layout .col-lg-4 .tf-sidebar {
   position: sticky;
-  top: 110px;
+  top: 60px;
   max-height: none;
   overflow: visible;
   padding-right: 0;
@@ -6648,4 +6742,189 @@
 }
 .hero-head-actions i {
   font-size: 18px;
+}
+
+/* contact page refresh */
+.section-contact-v2 {
+  background: #f7f9fc;
+}
+
+.section-contact-v2 .contact-v2-card {
+  background: #fff;
+  border: 1px solid #e2eaf3;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(17, 42, 89, 0.05);
+}
+
+.section-contact-v2 .contact-v2-info-card .title {
+  font-size: 34px;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.section-contact-v2 .contact-v2-list {
+  display: grid;
+  gap: 14px;
+}
+
+.section-contact-v2 .contact-v2-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e2ebf5;
+  border-radius: 12px;
+  background: #f9fbff;
+}
+
+.section-contact-v2 .contact-v2-list li .icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #e8f1fb;
+  color: #1b6c9f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.section-contact-v2 .contact-v2-list li .content .sub {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #6b7e96;
+  margin-bottom: 2px;
+}
+
+.section-contact-v2 .contact-v2-list li .content p,
+.section-contact-v2 .contact-v2-list li .content a {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #1a2e4c;
+}
+
+.section-contact-v2 .contact-v2-list li .content a:hover {
+  color: #1b6c9f;
+}
+
+.section-contact-v2 .contact-v2-social-wrap {
+  margin-top: 18px;
+}
+
+.section-contact-v2 .contact-v2-socials {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.section-contact-v2 .contact-v2-socials li a {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #dce7f4;
+  background: #f9fbff;
+}
+
+.section-contact-v2 .contact-v2-socials li a:hover {
+  background: #1b6c9f;
+  border-color: #1b6c9f;
+  color: #fff;
+}
+
+.section-contact-v2 .contact-v2-form-card .title {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.section-contact-v2 .contact-v2-form-card .form-contact label {
+  margin-bottom: 6px;
+}
+
+.section-contact-v2 .contact-v2-form-card .form-contact input,
+.section-contact-v2 .contact-v2-form-card .form-contact textarea,
+.section-contact-v2 .contact-v2-form-card .nice-select {
+  border-radius: 10px;
+}
+
+.section-contact-v2 .contact-v2-map-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.section-contact-v2 .contact-v2-map-card iframe {
+  width: 100%;
+  height: 450px;
+  border: 0;
+  display: block;
+}
+
+.section-contact-presence .contact-presence-card {
+  background: #fff;
+  border: 1px solid #e2eaf3;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(17, 42, 89, 0.05);
+}
+
+.section-contact-presence .presence-city-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.section-contact-presence .presence-city-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #d8e4f2;
+  border-radius: 999px;
+  background: #f7fbff;
+  color: #1c3254;
+  min-height: 44px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
+
+.section-contact-presence .presence-city-item .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1b6c9f;
+}
+
+@media (max-width: 991px) {
+  .section-contact-v2 .contact-v2-info-card .title,
+  .section-contact-v2 .contact-v2-form-card .title {
+    font-size: 26px;
+  }
+
+  .section-contact-presence .presence-city-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 575px) {
+  .section-contact-v2 .contact-v2-card,
+  .section-contact-presence .contact-presence-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .section-contact-v2 .contact-v2-info-card .title,
+  .section-contact-v2 .contact-v2-form-card .title {
+    font-size: 22px;
+  }
+
+  .section-contact-v2 .contact-v2-list li .content p,
+  .section-contact-v2 .contact-v2-list li .content a {
+    font-size: 14px;
+  }
+
+  .section-contact-presence .presence-city-grid {
+    grid-template-columns: 1fr;
+  }
 }

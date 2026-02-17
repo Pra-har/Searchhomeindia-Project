@@ -48,7 +48,7 @@ export default function SavedPropertiesClient() {
   const sidebarProject = visibleProperties[0] || savedProperties[0] || null;
 
   return (
-    <section className="section-saved-properties tf-spacing-4">
+    <section className="section-saved-properties">
       <div className="tf-container">
         <div className="saved-properties-head">
           <h1 className="saved-title">Saved / Favourite / Shortlisted Properties</h1>

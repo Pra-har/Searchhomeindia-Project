@@ -1,5 +1,3 @@
-import Brands from "@/components/common/Brands";
-
 import About from "@/components/contact/About";
 import Contact from "@/components/contact/Contact";
 import Footer from "@/components/footer/Footer";
@@ -18,8 +16,6 @@ export default function page() {
         <div className="main-content">
           <Contact />
           <About />
-          <Brands />
-          
         </div>
         <Footer />
       </div>

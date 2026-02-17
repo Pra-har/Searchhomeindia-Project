@@ -10,6 +10,28 @@ import Register from "@/components/modals/Register";
 export default function LayoutClientEffects() {
   const pathname = usePathname();
 
+  const forceUnlockPageScroll = () => {
+    if (typeof document === "undefined") return;
+
+    const htmlEl = document.documentElement;
+    const bodyEl = document.body;
+    if (!bodyEl) return;
+
+    bodyEl.classList.remove("modal-open");
+    bodyEl.style.removeProperty("overflow");
+    bodyEl.style.removeProperty("padding-right");
+    bodyEl.style.removeProperty("touch-action");
+
+    htmlEl.style.removeProperty("overflow");
+    htmlEl.style.removeProperty("padding-right");
+    htmlEl.style.removeProperty("touch-action");
+
+    const backdrops = document.querySelectorAll(
+      ".modal-backdrop, .offcanvas-backdrop"
+    );
+    backdrops.forEach((node) => node.remove());
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -28,6 +50,10 @@ export default function LayoutClientEffects() {
         const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
         offcanvasInstance.hide();
       });
+
+      // Fallback unlock for rare mobile cases where Bootstrap leaves the body locked.
+      forceUnlockPageScroll();
+      window.setTimeout(forceUnlockPageScroll, 80);
     };
 
     syncBootstrapUI();
@@ -62,6 +88,15 @@ export default function LayoutClientEffects() {
 
   useEffect(() => {
     const handleSticky = () => {
+      const hasDualHeaderSystem = Boolean(document.querySelector(".header-system"));
+      if (hasDualHeaderSystem) {
+        const homeHeader = document.querySelector(".header-home-primary");
+        if (homeHeader) {
+          homeHeader.classList.remove("fixed", "header-sticky", "is-sticky");
+        }
+        return;
+      }
+
       const navbar = document.querySelector(".header");
       if (!navbar) return;
 
@@ -79,7 +114,13 @@ export default function LayoutClientEffects() {
     };
 
     window.addEventListener("scroll", handleSticky);
+    handleSticky();
     return () => window.removeEventListener("scroll", handleSticky);
+  }, []);
+
+  useEffect(() => {
+    // Safety net on first mount as well.
+    forceUnlockPageScroll();
   }, []);
 
   return (
