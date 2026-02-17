@@ -15,15 +15,11 @@ import Properties from "@/components/home/Properties";
 import Services from "@/components/home/Services";
 import Testimonials from "@/components/home/Testimonials";
 import ThemeController from "@/components/common/ThemeController";
+import { CITY_OPTIONS } from "@/utlis/citySearch";
 
-const validCities = [
-  "mumbai",
-  "delhi",
-  "pune",
-  "bangalore",
-  "hyderabad",
-  "chennai",
-];
+const validCities = CITY_OPTIONS.filter((city) => city.slug !== "all-india").map(
+  (city) => city.slug
+);
 
 export default function CityPage({ params }) {
   const { city } = params;

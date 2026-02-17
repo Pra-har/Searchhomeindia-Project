@@ -17,7 +17,7 @@ export default function Topbar() {
                 <li>
                   <i className="icon-mail" />
                   <p>
-                    Email: <a href="#">contact@searchhomesindia.com</a>
+                    Email: <a href="#">contact@shi.com</a>
                   </p>
                 </li>
               </ul>

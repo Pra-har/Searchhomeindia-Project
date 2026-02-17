@@ -3,6 +3,14 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { getPropertyDetailAdapter } from "./propertyDetailAdapter";
+import {
+  FAVORITES_EVENT,
+  createFavoritePayload,
+  isPropertySaved,
+  removeFavoriteProperty,
+  saveFavoriteProperty,
+} from "@/utlis/favorites";
 
 const galleryPool = [
   "/images/section/property-detail-3.jpg",
@@ -121,41 +129,12 @@ const sortMediaItemsByType = (items) => {
   return Object.keys(grouped).flatMap((type) => grouped[type]);
 };
 
-const toDisplayText = (value, fallback = "") => {
-  if (value === undefined || value === null) return fallback;
-  if (Array.isArray(value)) {
-    const parsed = value
-      .map((entry) => toDisplayText(entry, ""))
-      .filter(Boolean);
-    return parsed.length ? parsed.join(", ") : fallback;
-  }
-  if (typeof value === "object") {
-    if (value?.label) return String(value.label);
-    if (value?.name) return String(value.name);
-    return fallback;
-  }
-  const parsed = String(value).trim();
-  return parsed || fallback;
-};
-
-const getConfigurationsText = (property, beds) =>
-  toDisplayText(
-    property?.configurations ??
-      property?.configuration ??
-      property?.bhkType ??
-      property?.projectDetails?.configurations ??
-      property?.projectDetails?.configuration,
-    `${beds}, ${beds + 1} BHK Apartments`
-  );
-
 export default function PropertyMainSlider({ property }) {
-  const title = property?.title || "Godrej Parkshire";
-  const location = property?.location || "Hoskote, Whitefield, Bangalore";
-  const beds = toNumber(property?.beds, 3);
-  const sqft = toNumber(property?.sqft, 4043);
+  const detailData = getPropertyDetailAdapter(property);
+  const title = detailData.title;
+  const location = detailData.location;
   const basePrice = toNumber(property?.price, 8600000);
-  const city = location.split(",").pop()?.trim() || "Bangalore";
-  const configurationsText = getConfigurationsText(property, beds);
+  const configurationsText = detailData.configurations;
 
   const pricing = toInrRange(basePrice);
   const mediaItems = sortMediaItemsByType(getMediaItems(property)).map((item, index) => ({
@@ -177,9 +156,13 @@ export default function PropertyMainSlider({ property }) {
   const [lightboxActive, setLightboxActive] = useState(0);
   const [canScrollTabsLeft, setCanScrollTabsLeft] = useState(false);
   const [canScrollTabsRight, setCanScrollTabsRight] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const shareMenuRef = useRef(null);
   const lightboxSwiperRef = useRef(null);
   const lightboxTabsRef = useRef(null);
+  const propertyIdentifier = String(
+    property?.id || title.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+  );
 
   const heroMedia = mediaItems;
   const lightboxMedia = mediaItems;
@@ -206,6 +189,22 @@ export default function PropertyMainSlider({ property }) {
       setCurrentUrl(window.location.href);
     }
   }, []);
+
+  useEffect(() => {
+    const refreshSavedState = () => {
+      setIsSaved(isPropertySaved(propertyIdentifier));
+    };
+
+    refreshSavedState();
+    if (typeof window === "undefined") return undefined;
+
+    window.addEventListener(FAVORITES_EVENT, refreshSavedState);
+    window.addEventListener("storage", refreshSavedState);
+    return () => {
+      window.removeEventListener(FAVORITES_EVENT, refreshSavedState);
+      window.removeEventListener("storage", refreshSavedState);
+    };
+  }, [propertyIdentifier]);
 
   useEffect(() => {
     const onOutsideClick = (event) => {
@@ -341,6 +340,75 @@ export default function PropertyMainSlider({ property }) {
     setTimeout(updateLightboxTabsScrollState, 220);
   };
 
+  const toggleSavedState = () => {
+    const next = !isSaved;
+    setIsSaved(next);
+
+    if (next) {
+      saveFavoriteProperty(
+        createFavoritePayload(property, {
+          id: propertyIdentifier,
+          title,
+          location,
+          imageSrc: property?.imageSrc || mainItem?.src,
+          beds: detailData.beds,
+          baths: detailData.baths,
+          sqft: detailData.builtUpArea,
+          price: Math.round(pricing.min),
+          category: property?.forSale ? "Buy" : property?.forRent ? "Rental" : "Others",
+          url: property?.id ? `/property-detail/${property.id}` : "/property-listing",
+        })
+      );
+      return;
+    }
+
+    removeFavoriteProperty(propertyIdentifier);
+  };
+
+  const handleVideoAction = () => {
+    if (detailData.videoUrl && typeof window !== "undefined") {
+      window.open(detailData.videoUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    const videoSection = document.getElementById("video-review-section");
+    if (videoSection?.scrollIntoView) {
+      videoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    openLightbox(mainItem.absoluteIndex);
+  };
+
+  const handleBrochureAction = () => {
+    if (detailData.brochureUrl && typeof window !== "undefined") {
+      window.open(detailData.brochureUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    if (typeof window === "undefined") return;
+    const brochureText = [
+      `${title} - Project Brochure`,
+      `Location: ${location}`,
+      `Configurations: ${detailData.configurations}`,
+      `Price: \u20B9 ${compactPrice(pricing.min)} - ${compactPrice(pricing.max)}`,
+      `Built-up: ${detailData.builtUpRange}`,
+      `RERA: ${detailData.reraId}`,
+      "",
+      "This is a dummy brochure export. Replace with backend brochure URL later.",
+    ].join("\n");
+
+    const brochureBlob = new Blob([brochureText], {
+      type: "text/plain;charset=utf-8",
+    });
+    const downloadUrl = window.URL.createObjectURL(brochureBlob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-brochure.txt`;
+    link.click();
+    window.URL.revokeObjectURL(downloadUrl);
+  };
+
   return (
     <section id="gallery-swiper-started" className="section-property-image property-hero">
       <div className="tf-container">
@@ -423,7 +491,15 @@ export default function PropertyMainSlider({ property }) {
                     className="hero-chip"
                     onClick={() => setShowShareMenu((prev) => !prev)}
                   >
-                    <i className="icon-send-message" />
+                    <span className="share-icon-svg" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                          </svg>
+                    </span>
                     Share
                   </button>
                   {showShareMenu && (
@@ -446,9 +522,14 @@ export default function PropertyMainSlider({ property }) {
                     </div>
                   )}
                 </div>
-                <button type="button" className="hero-chip">
+                <button
+                  type="button"
+                  className={`hero-chip${isSaved ? " is-active" : ""}`}
+                  onClick={toggleSavedState}
+                  aria-pressed={isSaved}
+                >
                   <i className="icon-heart-1" />
-                  Save
+                  {isSaved ? "Saved" : "Save"}
                 </button>
               </div>
 
@@ -457,7 +538,7 @@ export default function PropertyMainSlider({ property }) {
                   <i className="icon-img" />
                   {gallery.length} Photos
                 </button>
-                <button type="button" className="hero-chip light">
+                <button type="button" className="hero-chip light" onClick={handleVideoAction}>
                   <i className="icon-play" />
                   Video
                 </button>
@@ -465,7 +546,7 @@ export default function PropertyMainSlider({ property }) {
                   <i className="icon-location-2" />
                   Map
                 </a>
-                <button type="button" className="hero-chip light">
+                <button type="button" className="hero-chip light" onClick={handleBrochureAction}>
                   <i className="icon-DownloadSimple" />
                   Brochure
                 </button>
@@ -532,19 +613,17 @@ export default function PropertyMainSlider({ property }) {
             <p>Configurations</p>
           </div>
           <div className="fact-item">
-            <h6>Jul 2028</h6>
+            <h6>{detailData.possessionDate}</h6>
             <p>Possession Starts</p>
           </div>
           <div className="fact-item">
             <h6>
-              {"\u20B9"} {formatInr(pricing.perSqft)} / sq.ft
+              {"\u20B9"} {formatInr(detailData.avgPricePerSqft)} / sq.ft
             </h6>
             <p>Avg. Price</p>
           </div>
           <div className="fact-item">
-            <h6>
-              {Math.max(800, sqft - 400)} - {sqft + 300} sq.ft
-            </h6>
+            <h6>{detailData.builtUpRange}</h6>
             <p>Sizes (Built-up)</p>
           </div>
         </div>
@@ -573,12 +652,25 @@ export default function PropertyMainSlider({ property }) {
                   </p>
                 </div>
                 <a href={whatsappLink} target="_blank" rel="noreferrer" className="tool-btn">
-                  <i className="icon-send-message" />
+                  <span className="share-icon-svg" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="18" cy="5" r="3"/>
+                      <circle cx="6" cy="12" r="3"/>
+                      <circle cx="18" cy="19" r="3"/>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                    </svg>
+                  </span>
                   Share
                 </a>
-                <button type="button" className="tool-btn">
+                <button
+                  type="button"
+                  className={`tool-btn${isSaved ? " is-active" : ""}`}
+                  onClick={toggleSavedState}
+                  aria-pressed={isSaved}
+                >
                   <i className="icon-heart-1" />
-                  Save
+                  {isSaved ? "Saved" : "Save"}
                 </button>
               </div>
 

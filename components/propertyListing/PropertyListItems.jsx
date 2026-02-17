@@ -3,12 +3,33 @@
 import { properties11 } from "@/data/properties";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import {
+  FAVORITES_EVENT,
+  createFavoritePayload,
+  getSavedProperties,
+  removeFavoriteProperty,
+  saveFavoriteProperty,
+} from "@/utlis/favorites";
 
-export default function PropertyListItems({ showItems = properties11.length }) {
+export default function PropertyListItems({
+  items = properties11,
+  showItems,
+  mode = "listing",
+}) {
   const formatNumber = (value) => new Intl.NumberFormat("en-IN").format(value);
+  const formatAreaLabel = (value) => {
+    if (value === undefined || value === null || value === "") return "-";
+    if (typeof value === "number" && Number.isFinite(value)) return formatNumber(value);
+    const asText = String(value).trim();
+    const normalizedNumber = Number(asText.replace(/,/g, ""));
+    if (Number.isFinite(normalizedNumber)) return formatNumber(normalizedNumber);
+    return asText;
+  };
+  const isSavedView = mode === "saved";
+  const [savedIds, setSavedIds] = useState(new Set());
 
   const galleryPool = [
     "/images/section/box-house.jpg",
@@ -30,10 +51,38 @@ export default function PropertyListItems({ showItems = properties11.length }) {
       return property.images;
     }
     const poolLength = galleryPool.length;
+    const primaryImage =
+      property?.imageSrc ||
+      property?.mainImage?.src ||
+      galleryPool[index % poolLength];
     return Array.from({ length: 4 }, (_, offset) => {
-      if (offset === 0) return property.imageSrc;
+      if (offset === 0) return primaryImage;
       return galleryPool[(index + offset) % poolLength];
     });
+  };
+
+  const getPropertyDetailUrl = (property) =>
+    property?.url || `/property-detail/${property.id}`;
+
+  const formatPriceLabel = (value) => {
+    if (value === undefined || value === null || value === "") {
+      return "Price on Request";
+    }
+    if (typeof value === "string") return value;
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      return String(value);
+    }
+    if (value >= 10000000) return `\u20B9 ${(value / 10000000).toFixed(2)} Cr`;
+    if (value >= 100000) return `\u20B9 ${(value / 100000).toFixed(2)} L`;
+    return `\u20B9 ${formatNumber(value)}`;
+  };
+
+  const getCategoryBadgeClass = (value) => {
+    const normalized = String(value || "others").toLowerCase();
+    if (normalized.includes("buy")) return "is-buy";
+    if (normalized.includes("pg")) return "is-pg";
+    if (normalized.includes("rent")) return "is-rental";
+    return "is-others";
   };
 
   const getShareUrl = (propertyId) => {
@@ -66,21 +115,76 @@ export default function PropertyListItems({ showItems = properties11.length }) {
     );
   };
 
+  useEffect(() => {
+    const syncSavedIds = () => {
+      const nextIds = new Set(
+        getSavedProperties().map((item) => String(item.id))
+      );
+      setSavedIds(nextIds);
+    };
+
+    syncSavedIds();
+    if (typeof window === "undefined") return undefined;
+
+    window.addEventListener(FAVORITES_EVENT, syncSavedIds);
+    window.addEventListener("storage", syncSavedIds);
+    return () => {
+      window.removeEventListener(FAVORITES_EVENT, syncSavedIds);
+      window.removeEventListener("storage", syncSavedIds);
+    };
+  }, []);
+
+  const toggleFavorite = (property) => {
+    const propertyId = String(property.id);
+    if (savedIds.has(propertyId)) {
+      removeFavoriteProperty(propertyId);
+      return;
+    }
+
+    saveFavoriteProperty(
+      createFavoritePayload(property, {
+        id: propertyId,
+        category: property?.forSale ? "Buy" : property?.forRent ? "Rental" : "Others",
+        url: `/property-detail/${property.id}`,
+      })
+    );
+  };
+
+  const visibleItems =
+    typeof showItems === "number" ? items.slice(0, showItems) : items;
+
   return (
     <>
-      {properties11.slice(0, showItems).map((property, i) => {
+      {visibleItems.map((property, i) => {
+        const propertyId = String(property.id);
+        const isSaved = savedIds.has(propertyId);
         const galleryImages = getGalleryImages(property, i);
         const sliderPrevClass = `listing-prev-${property.id}`;
         const sliderNextClass = `listing-next-${property.id}`;
         const statusLabel = property.status || "Ongoing";
         const facingLabel = property.facing || "East Facing";
         const floorLabel = property.totalFloors || "1st of 14 Floors";
+        const propertyUrl = getPropertyDetailUrl(property);
 
         return (
-          <div key={i} className="box-house style-list hover-img">
+          <div
+            key={`${propertyId}-${i}`}
+            className={`box-house style-list hover-img${
+              isSavedView ? " saved-list-item" : ""
+            }`}
+          >
             <div className="image-wrap">
+              {isSavedView ? (
+                <span
+                  className={`saved-category-inline-badge ${getCategoryBadgeClass(
+                    property.category
+                  )}`}
+                >
+                  {property.category || "Others"}
+                </span>
+              ) : null}
               <Link
-                href={`/property-detail/${property.id}`}
+                href={propertyUrl}
                 className="listing-link-wrap"
               >
                 <Swiper
@@ -131,12 +235,17 @@ export default function PropertyListItems({ showItems = properties11.length }) {
 
             <div className="content">
               <div className="listing-top-actions">
-                <button type="button" className="listing-favorite-btn" aria-label="Add to favorites">
+                <button
+                  type="button"
+                  className={`listing-favorite-btn${isSaved ? " is-active" : ""}`}
+                  aria-label={isSaved ? "Remove from favorites" : "Add to favorites"}
+                  onClick={() => toggleFavorite(property)}
+                >
                   <i className="icon-heart-1" />
                 </button>
               </div>
               <h5 className="title">
-                <Link href={`/property-detail/${property.id}`}>{property.title}</Link>
+                <Link href={propertyUrl}>{property.title}</Link>
               </h5>
               <p className="location text-1 flex items-center gap-6">
                 <i className="icon-location" /> {property.location}
@@ -160,7 +269,7 @@ export default function PropertyListItems({ showItems = properties11.length }) {
                       />
                     </svg>
                   </span>
-                  <span>{formatNumber(property.sqft)}</span> Sq.Ft.
+                  <span>{formatAreaLabel(property.sqft)}</span> Sq.Ft.
                 </li>
                 <li className="text-1 flex">
                   <span className="meta-svg-icon" aria-hidden="true">
@@ -199,32 +308,68 @@ export default function PropertyListItems({ showItems = properties11.length }) {
 
 
               <div className="bot flex justify-between items-center">
-                <h5 className="price">
-                  {"\u20B9"} {formatNumber(property.price)}
-                </h5>
-                <div className="wrap-btn flex listing-action-buttons">
-                  <button
-                    type="button"
-                    className="tf-btn style-border pd-1"
-                    aria-label="Share property"
-                    onClick={() => handleShareAction(property)}
-                  >
-                    <span className="action-icon" aria-hidden="true">
-                      <i className="icon-send-message" />
-                    </span>
-                    <span className="action-label">Share</span>
-                  </button>
-                  <a
-                    href="tel:+918147267372"
-                    className="tf-btn style-border pd-1"
-                    aria-label="Call owner"
-                  >
-                    <span className="action-icon" aria-hidden="true">
-                      <i className="icon-phone-1" />
-                    </span>
-                    <span className="action-label">Contact Owner</span>
-                  </a>
-                </div>
+                <h5 className="price listing-price">{formatPriceLabel(property.price)}</h5>
+                {isSavedView ? (
+                  <div className="wrap-btn flex listing-action-buttons saved-list-actions">
+                    <Link
+                      href="/compare"
+                      className="tf-btn style-border pd-1"
+                      aria-label="Compare property"
+                    >
+                      <span className="action-icon" aria-hidden="true">
+                        <i className="icon-compare" />
+                      </span>
+                      <span className="action-label">Compare</span>
+                    </Link>
+                    <button
+                      type="button"
+                      className="tf-btn style-border pd-1"
+                      aria-label="Remove from saved"
+                      onClick={() => removeFavoriteProperty(propertyId)}
+                    >
+                      <span className="action-icon" aria-hidden="true">
+                        <i className="icon-trashcan1" />
+                      </span>
+                      <span className="action-label">Remove</span>
+                    </button>
+                    <Link href={propertyUrl} className="tf-btn bg-color-primary pd-1" aria-label="Open property">
+                      <span className="action-icon" aria-hidden="true">
+                        <i className="icon-view" />
+                      </span>
+                      <span className="action-label">Open</span>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="wrap-btn flex listing-action-buttons">
+                    <button
+                      type="button"
+                      className="tf-btn style-border pd-1"
+                      aria-label="Share property"
+                      onClick={() => handleShareAction(property)}
+                    >
+                      <span className="action-icon share-icon" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="18" cy="5" r="3"/>
+                          <circle cx="6" cy="12" r="3"/>
+                          <circle cx="18" cy="19" r="3"/>
+                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                      </span>
+                      <span className="action-label">Share</span>
+                    </button>
+                    <a
+                      href="tel:+918147267372"
+                      className="tf-btn style-border pd-1"
+                      aria-label="Call owner"
+                    >
+                      <span className="action-icon" aria-hidden="true">
+                        <i className="icon-phone-1" />
+                      </span>
+                      <span className="action-label">Contact Owner</span>
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           </div>

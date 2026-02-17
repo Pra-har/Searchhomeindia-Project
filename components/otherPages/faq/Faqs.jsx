@@ -475,7 +475,7 @@ export default function Faqs() {
                       </li>
                       <li>
                         <i className="icon-mail" />
-                        <a href="#">contact@searchhomesindia.com</a>
+                        <a href="#">contact@shi.com</a>
                       </li>
                     </ul>
                   </div>

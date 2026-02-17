@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 
-export default function Sidebar({ property }) {
+export default function Sidebar({ property, showProjectName = true }) {
   const projectName = property?.title || "this property";
 
   return (
@@ -11,10 +11,14 @@ export default function Sidebar({ property }) {
       <form className="form-contact-agent property-inquiry-form" onSubmit={(e) => e.preventDefault()}>
         <div className="sidebar-form-head">
           <h4 className="heading-title">Get Full Details</h4>
-          <p>
-            Fill your details and our property expert will call you back for{" "}
-            <strong>{projectName}</strong>.
-          </p>
+          {showProjectName ? (
+            <p>
+              Fill your details and our property expert will call you back for{" "}
+              <strong>{projectName}</strong>.
+            </p>
+          ) : (
+            <p>Fill your details and our property expert will call you back shortly.</p>
+          )}
         </div>
 
         <fieldset>

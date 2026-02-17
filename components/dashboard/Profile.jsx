@@ -153,7 +153,7 @@ export default function Profile() {
                 <input
                   type="text"
                   id="email"
-                  defaultValue="themeflat@gmail.com"
+                  defaultValue="Shi@gmail.com"
                   className="form-control"
                 />
               </div>

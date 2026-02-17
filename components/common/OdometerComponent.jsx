@@ -10,7 +10,6 @@ const OdometerComponent = ({ max }) => {
   useEffect(() => {
     import("odometer").then((Odometer) => {
       // Initialize Odometer or do something with it
-
       // Example usage of Odometer
       if (Odometer && odometerRef.current) {
         odometerInitRef.current = new Odometer.default({

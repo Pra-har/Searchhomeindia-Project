@@ -1,7 +1,7 @@
 import React from "react";
-import LayoutHandler from "./LayoutHandler";
+// import LayoutHandler from "./LayoutHandler";
 import DropdownSelect from "../common/DropdownSelect";
-import PropertyGridItems from "./PropertyGridItems";
+// import PropertyGridItems from "./PropertyGridItems";
 import PropertyListItems from "./PropertyListItems";
 import FilterSidebarLeft from "./FilterSidebarLeft";
 import Sidebar from "./Sidebar";
@@ -110,15 +110,6 @@ export default function Properties({ defaultGrid = false }) {
           <div className="col-lg-8">
             <div className="flat-animate-tab">
               <div className="tab-content">
-                <div
-                  className={`tab-pane ${defaultGrid ? " active show" : ""}`}
-                  id="gridLayout"
-                  role="tabpanel"
-                >
-                  <div className="tf-grid-layout md-col-2">
-                    <PropertyGridItems />
-                  </div>
-                </div>
                 <div
                   className={`tab-pane ${!defaultGrid ? " active show" : ""}`}
                   id="listLayout"
