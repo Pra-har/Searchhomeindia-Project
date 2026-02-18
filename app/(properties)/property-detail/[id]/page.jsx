@@ -1,10 +1,10 @@
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Breadcumb from "@/components/common/Breadcumb";
-import Details from "@/components/propertyDetail/Details";
-import RelatedProperties from "@/components/propertyDetail/RelatedProperties";
-import PropertyMainSlider from "@/components/propertyDetail/PropertyMainSlider";
-import PropertyQuickNav from "@/components/propertyDetail/PropertyQuickNav";
+import Details from "@/components/properties/propertyDetail/Details";
+import RelatedProperties from "@/components/properties/propertyDetail/RelatedProperties";
+import PropertyMainSlider from "@/components/properties/propertyDetail/PropertyMainSlider";
+import PropertyQuickNav from "@/components/properties/propertyDetail/PropertyQuickNav";
 import React from "react";
 import { allProperties } from "@/data/properties";
 
@@ -122,7 +122,14 @@ export default async function page({ params }) {
     <>
       <div id="wrapper">
         <Header />
-        <Breadcumb pageName="Property Details" />
+        <Breadcumb
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Property Listing", href: "/property-listing" },
+            { label: "Property Detail" },
+            { label: property?.title || "Current Property" },
+          ]}
+        />
         <div className="main-content">
           <PropertyMainSlider property={property} />
           <PropertyQuickNav />

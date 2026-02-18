@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import DropdownSelect from "../common/DropdownSelect";
+import DropdownSelect from "../../common/DropdownSelect";
 
 export default function LoanCalculator() {
   return (

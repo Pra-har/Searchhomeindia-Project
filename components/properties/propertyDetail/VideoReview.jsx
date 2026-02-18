@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import ModalVideo from "../common/ModalVideo";
+import ModalVideo from "../../common/ModalVideo";
 import { useMemo, useState } from "react";
 
 const firstFilled = (...values) => {

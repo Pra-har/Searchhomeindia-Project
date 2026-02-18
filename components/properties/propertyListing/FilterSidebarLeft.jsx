@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import DropdownSelect from "../common/DropdownSelect";
+import DropdownSelect from "../../common/DropdownSelect";
 import Slider from "rc-slider";
 
 const propertyTypes = [

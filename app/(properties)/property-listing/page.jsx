@@ -4,7 +4,7 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 // import FilterTop from "@/components/properties/FilterTop";
 
-import Properties from "@/components/propertyListing/Properties";
+import Properties from "@/components/properties/propertyListing/Properties";
 import React from "react";
 
 export const metadata = {

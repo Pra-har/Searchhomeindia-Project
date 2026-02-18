@@ -564,9 +564,6 @@
             left: 0;
             @include mixin.d-flex();
             min-width: 800px;
-            &::before {
-                left: 105px !important;
-            }
             > li {
                 > a {
                     font-size: 20px;

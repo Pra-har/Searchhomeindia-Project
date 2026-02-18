@@ -6,8 +6,8 @@ import {
   FAVORITES_EVENT,
   getSavedProperties,
 } from "@/utlis/favorites";
-import PropertyListItems from "@/components/propertyListing/PropertyListItems";
-import PropertyDetailSidebar from "@/components/propertyDetail/Sidebar";
+import PropertyListItems from "@/components/properties/propertyListing/PropertyListItems";
+import PropertyDetailSidebar from "@/components/properties/propertyDetail/Sidebar";
 
 const CATEGORY_TABS = ["Buy", "Pg", "Rental", "Others"];
 

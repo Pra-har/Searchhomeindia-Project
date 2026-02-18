@@ -291,7 +291,7 @@ function HeaderDirectoryOffcanvas({ authState, onLogout }) {
 
     return [
       { href: "/home-loan-process", label: "About" },
-      { href: "/blog-grid", label: "Blog" },
+      { href: "/blog-listing", label: "Blog" },
       { href: "/contact", label: "Contact" },
       { href: "/add-property", label: "Post Property" },
       ...dynamic,

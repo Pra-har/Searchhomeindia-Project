@@ -48,7 +48,7 @@ export const footerData = [
       { text: "Real Estate Guide", href: "#" },
       { text: "Data Intelligence", href: "#" },
       { text: "Women Home Buyers", href: "#" },
-      { text: "Blogs", href: "/blog-grid" },
+      { text: "Blogs", href: "/blog-listing" },
     ],
     className: "style-2",
   },

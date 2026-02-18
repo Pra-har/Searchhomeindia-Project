@@ -1,135 +1,65 @@
 "use client";
-import { blogMenu, homes, otherPages, propertyLinks } from "@/data/menu";
+import { megaHeaderMenus } from "@/data/menu";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function Nav() {
   const pathname = usePathname();
-  const isParentActive = (menus) =>
-    menus.some((menu) =>
-      menu.submenu
-        ? menu.submenu.some((item) =>
-            item.submenu
-              ? item.submenu.some(
-                  (item) => item.href.split("/")[1] === pathname.split("/")[1]
-                )
-              : item.href.split("/")[1] === pathname.split("/")[1]
-          )
-        : menu.href.split("/")[1] === pathname.split("/")[1]
-    );
+  const currentSegment = pathname.split("/")[1];
+  const isHomeActive = currentSegment === "" || ["mumbai", "delhi", "bangalore", "hyderabad", "chennai", "pune"].includes(currentSegment);
+  const isListingRoute = ["property-listing", "property-detail"].includes(currentSegment);
+  const isBlogActive = currentSegment === "blog-listing" || currentSegment === "blog-details";
+  const isContactActive = currentSegment === "contact";
+
+  const renderMegaNav = (label, key, href) => (
+    <li className={`has-child style-2 simple-mega-menu ${isListingRoute ? "current-menu" : ""}`}>
+      <button type="button" className="nav-menu-trigger">
+        {label}
+      </button>
+      <ul className="submenu">
+        {megaHeaderMenus[key].map((column) => (
+          <li key={`${key}-${column.title}`} className={column.iconList ? "is-icon-col" : ""}>
+            <p className="submenu-title">{column.title}</p>
+            <ul className="submenu2">
+              {column.submenu.map((item) => (
+                <li key={`${key}-${column.title}-${item.label}`}>
+                  <Link href={item.href}>
+                    {column.iconList ? <span className="menu-dot-icon" aria-hidden="true" /> : null}
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            {column.footerLink ? (
+              <Link href={column.footerLink.href} className="submenu-footer-link">
+                {column.footerLink.label}
+              </Link>
+            ) : null}
+          </li>
+        ))}
+        <li className="mega-view-all-mobile">
+          <Link href={href}>View all {label.toLowerCase()} properties</Link>
+        </li>
+      </ul>
+    </li>
+  );
+
   return (
     <>
-      <li
-        className={`${
-          homes.some((elm) => elm.href == pathname) ? "current-menu" : ""
-        }`}
-      >
+      <li className={isHomeActive ? "current-menu" : ""}>
         <Link href="/">Home</Link>
       </li>
-      <li
-        className={`has-child style-2 ${
-          isParentActive(propertyLinks) ? "current-menu" : ""
-        } `}
-      >
-        <button type="button" className="nav-menu-trigger">
-          Listing
-        </button>
-        <ul className="submenu">
-          {propertyLinks.map((menu, index) => (
-            <li key={index}>
-              <button type="button" className="submenu-title">
-                {menu.title}
-              </button>
-              <ul className="submenu2">
-                {menu.submenu.map((item, subIndex) => (
-                  <li
-                    key={subIndex}
-                    className={
-                      pathname.split("/")[1] == item.href.split("/")[1]
-                        ? "current-item"
-                        : ""
-                    }
-                  >
-                    <Link href={item.href}>{item.label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+      {renderMegaNav("Buy", "buy", "/property-listing?intent=buy")}
+      {renderMegaNav("Rent", "rent", "/property-listing?intent=rent")}
+      {renderMegaNav("New Launch", "launch", "/property-listing?segment=new-launch")}
+      <li>
+        <Link href="/property-listing?segment=luxury">Luxury Homes</Link>
       </li>
-      <li
-        className={`has-child  ${
-          isParentActive(otherPages) ? "current-menu" : ""
-        } `}
-      >
-        <button type="button" className="nav-menu-trigger">
-          Pages
-        </button>
-        <ul className="submenu">
-          {otherPages.map((menu, index) => (
-            <li
-              key={index}
-              className={`${menu.className || ""}  ${
-                isParentActive(menu.submenu || []) ? "current-item" : ""
-              }   ${
-                menu.href?.split("/")[1] == pathname.split("/")[1]
-                  ? "current-item"
-                  : ""
-              } `}
-            >
-              {menu.submenu ? (
-                <>
-                  <button type="button" className="submenu-title">
-                    {menu.title}
-                  </button>
-                  <ul className="submenu">
-                    {menu.submenu.map((item, subIndex) => (
-                      <li
-                        key={subIndex}
-                        className={
-                          item.href?.split("/")[1] == pathname.split("/")[1]
-                            ? "current-item"
-                            : ""
-                        }
-                      >
-                        <Link href={item.href}>{item.label}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <Link href={menu.href}>{menu.label}</Link>
-              )}
-            </li>
-          ))}
-        </ul>
+      <li className={isBlogActive ? "current-menu" : ""}>
+        <Link href="/blog-listing">Blogs</Link>
       </li>
-      <li
-        className={`has-child ${
-          isParentActive(blogMenu) ? "current-menu" : ""
-        } `}
-      >
-        <button type="button" className="nav-menu-trigger">
-          Blog
-        </button>
-        <ul className="submenu">
-          {blogMenu.map((item, index) => (
-            <li
-              key={index}
-              className={
-                item.href.split("/")[1] == pathname.split("/")[1]
-                  ? "current-item"
-                  : ""
-              }
-            >
-              <Link href={item.href}>{item.label}</Link>
-            </li>
-          ))}
-        </ul>
-      </li>
-      <li className={"/contact" == pathname ? "current-menu" : ""}>
+      <li className={isContactActive ? "current-menu" : ""}>
         <Link href={`/contact`}>Contact</Link>
       </li>
     </>

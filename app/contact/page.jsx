@@ -1,4 +1,3 @@
-import About from "@/components/contact/About";
 import Contact from "@/components/contact/Contact";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
@@ -15,7 +14,6 @@ export default function page() {
         <Header />
         <div className="main-content">
           <Contact />
-          <About />
         </div>
         <Footer />
       </div>
