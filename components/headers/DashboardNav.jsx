@@ -190,7 +190,7 @@ export default function DashboardNav({ color = "" }) {
           </svg>
           My package
         </Link>
-        <Link className="dropdown-item" href={`/my-favorites`}>
+        <Link className="dropdown-item" href={`/saved-properties`}>
           <svg
             width={20}
             height={20}

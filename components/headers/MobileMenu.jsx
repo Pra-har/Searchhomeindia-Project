@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { dismissAllModals } from "@/lib/utils/navigationHelper";
 
 export default function MobileMenu() {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export default function MobileMenu() {
     >
       <div className="offcanvas-header top-nav-mobile">
         <div className="offcanvas-title">
-          <Link href="/">
+          <Link href="/" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
             <Image
               alt=""
               src="/images/logo/shi_logo_normal.png"
@@ -39,37 +40,37 @@ export default function MobileMenu() {
         <div className="mb-body">
           <ul id="menu-mobile-menu">
             <li className={`menu-item ${isHomeActive ? "current-item" : ""}`}>
-              <Link href="/" className="item-menu-mobile">
+              <Link href="/" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 Home
               </Link>
             </li>
             <li className="menu-item">
-              <Link href="/property-listing?intent=buy" className="item-menu-mobile">
+              <Link href="/property-listing?intent=buy" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 Buy
               </Link>
             </li>
             <li className="menu-item">
-              <Link href="/property-listing?intent=rent" className="item-menu-mobile">
+              <Link href="/property-listing?intent=rent" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 Rent
               </Link>
             </li>
             <li className="menu-item">
-              <Link href="/property-listing?segment=new-launch" className="item-menu-mobile">
+              <Link href="/property-listing?segment=new-launch" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 New Launch
               </Link>
             </li>
             <li className="menu-item">
-              <Link href="/property-listing?segment=luxury" className="item-menu-mobile">
+              <Link href="/property-listing?segment=luxury" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 Luxury Homes
               </Link>
             </li>
             <li className={`menu-item ${isBlogActive ? "current-item" : ""}`}>
-              <Link href="/blog-listing" className="item-menu-mobile">
+              <Link href="/blog-listing" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 Blogs
               </Link>
             </li>
             <li className={`menu-item ${isContactActive ? "current-item" : ""}`}>
-              <Link href="/contact" className="item-menu-mobile">
+              <Link href="/contact" className="item-menu-mobile" onClick={dismissAllModals} data-bs-dismiss="offcanvas">
                 Contact
               </Link>
             </li>

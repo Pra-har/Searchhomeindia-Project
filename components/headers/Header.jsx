@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { otherPages, propertyLinks } from "@/data/menu";
+import { dismissAllModals } from "@/lib/utils/navigationHelper";
 import FavoritesNavButton from "./FavoritesNavButton";
 import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
@@ -275,28 +276,37 @@ function HeaderRightMenu({ authState, onLogout }) {
 
 function HeaderDirectoryOffcanvas({ authState, onLogout }) {
   const sideLinks = useMemo(() => {
-    const dynamic = [];
-    propertyLinks.forEach((group) => {
-      group.submenu?.forEach((item) => {
-        if (!dynamic.some((link) => link.href === item.href)) {
-          dynamic.push({ href: item.href, label: item.label });
-        }
-      });
-    });
-    otherPages.forEach((item) => {
-      if (!dynamic.some((link) => link.href === item.href)) {
-        dynamic.push({ href: item.href, label: item.label });
-      }
-    });
-
     return [
-      { href: "/home-loan-process", label: "About" },
-      { href: "/blog-listing", label: "Blog" },
-      { href: "/contact", label: "Contact" },
-      { href: "/add-property", label: "Post Property" },
-      ...dynamic,
+      { href: "/add-property", label: "Post Property", icon: "icon-find-plus", category: "property" },
+      { href: "/saved-properties", label: "Saved/Shortlisted", icon: "icon-heart-1", category: "property" },
+      { href: "/compare", label: "Compare", icon: "icon-compare", category: "property" },
+      { href: "/career", label: "Careers", icon: "icon-bag", category: "company" },
+      { href: "/blog-listing", label: "Blog", icon: "icon-circle-arrow", category: "company" },
+      { href: "/home-interiors", label: "Home Interiors", icon: "icon-home", category: "services" },
+      { href: "/home-loan-process", label: "Home Loan Process", icon: "icon-money", category: "services" },
+      { href: "/our-services", label: "Our Services", icon: "icon-check", category: "services" },
+      { href: "/about", label: "About", icon: "icon-location", category: "company" },
+      { href: "/contact", label: "Contact", icon: "icon-phone-2", category: "company" },
+      { href: "/become-a-partner", label: "Become a Partner", icon: "icon-save", category: "company" },
+      { href: "/terms-and-conditions", label: "Terms and Conditions", icon: "icon-DownloadSimple", category: "legal" },
+      { href: "/privacy-policy", label: "Privacy Policy", icon: "icon-view", category: "legal" },
+      { href: "/faq", label: "FAQs", icon: "icon-star", category: "legal" },
     ];
   }, []);
+
+  const categoryLabels = {
+    property: "Property Tools",
+    services: "Services & Solutions",
+    company: "Company",
+    legal: "Legal & Support",
+  };
+
+  const groupedLinks = {
+    property: sideLinks.filter((link) => link.category === "property"),
+    services: sideLinks.filter((link) => link.category === "services"),
+    company: sideLinks.filter((link) => link.category === "company"),
+    legal: sideLinks.filter((link) => link.category === "legal"),
+  };
 
   return (
     <div
@@ -305,8 +315,8 @@ function HeaderDirectoryOffcanvas({ authState, onLogout }) {
       id="header-side-menu"
       aria-labelledby="header-side-menu-label"
     >
-      <div className="offcanvas-header">
-        <h5 id="header-side-menu-label">Quick Menu</h5>
+      <div className="offcanvas-header border-bottom">
+        <h5 id="header-side-menu-label" className="fw-bold">Quick Menu</h5>
         <button
           type="button"
           className="btn-close text-reset"
@@ -315,43 +325,68 @@ function HeaderDirectoryOffcanvas({ authState, onLogout }) {
         />
       </div>
       <div className="offcanvas-body">
-        <div className="header-side-account">
+        <div className="header-side-account mb-4">
           {authState.isLoggedIn ? (
             <>
-              <div className="signed-user">
+              <div className="signed-user mb-3">
                 <span className="avatar">{authState.nameInitial || "U"}</span>
                 <div className="info">
                   <p className="label">Signed in as</p>
                   <strong>{authState.firstName || "User"}</strong>
                 </div>
               </div>
-              <div className="auth-actions">
-                <Link href="/my-profile">
+              <div className="auth-actions d-grid gap-2">
+                <Link 
+                  href="/my-profile" 
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={dismissAllModals}
+                  data-bs-dismiss="offcanvas"
+                >
                   Profile
                 </Link>
-                <button type="button" onClick={onLogout}>
+                <button type="button" onClick={onLogout} className="btn btn-primary btn-sm">
                   Logout
                 </button>
               </div>
             </>
           ) : (
-            <div className="auth-actions guest">
-              <a href="#modalLogin" data-bs-toggle="modal" data-bs-dismiss="offcanvas">
+            <div className="auth-actions d-grid gap-2">
+              <a href="#modalLogin" data-bs-toggle="modal" data-bs-dismiss="offcanvas" className="btn btn-primary btn-sm">
                 Login
               </a>
-              <a href="#modalRegister" data-bs-toggle="modal" data-bs-dismiss="offcanvas">
+              <a href="#modalRegister" data-bs-toggle="modal" data-bs-dismiss="offcanvas" className="btn btn-outline-primary btn-sm">
                 Signup
               </a>
             </div>
           )}
         </div>
-        <ul className="header-side-links">
-          {sideLinks.map((item) => (
-            <li key={`${item.href}-${item.label}`}>
-              <Link href={item.href}>{item.label}</Link>
-            </li>
-          ))}
-        </ul>
+
+        <div className="header-side-links-wrapper">
+          {Object.entries(groupedLinks).map(([category, links]) =>
+            links.length > 0 ? (
+              <div key={category} className="menu-category">
+                <h6 className="category-title text-uppercase text-muted small fw-bold mt-3 mb-2">
+                  {categoryLabels[category]}
+                </h6>
+                <ul className="header-side-links">
+                  {links.map((item) => (
+                    <li key={`${item.href}-${item.label}`} className="header-side-link-item">
+                      <Link 
+                        href={item.href} 
+                        className="header-side-link-label"
+                        onClick={dismissAllModals}
+                        data-bs-dismiss="offcanvas"
+                      >
+                        {item.icon && <i className={`${item.icon} me-2`} />}
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null
+          )}
+        </div>
       </div>
     </div>
   );

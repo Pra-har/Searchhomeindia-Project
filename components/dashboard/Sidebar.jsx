@@ -147,10 +147,10 @@ export default function Sidebar() {
             </li>
             <li
               className={`nav-menu-item ${
-                pathname == "/my-favorites" ? "active" : ""
+                pathname == "/saved-properties" ? "active" : ""
               } `}
             >
-              <Link className="nav-menu-link" href={`/my-favorites`}>
+              <Link className="nav-menu-link" href={`/saved-properties`}>
                 <svg
                   width={20}
                   height={20}

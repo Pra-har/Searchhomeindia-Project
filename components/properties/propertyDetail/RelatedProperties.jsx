@@ -1,11 +1,24 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { properties10 } from "@/data/properties";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-export default function RelatedProperties() {
+import { properties10 } from "@/data/properties";
+
+const formatInr = (value) => {
+  if (typeof value === "string") return value;
+  if (typeof value !== "number" || !Number.isFinite(value)) return "Price on Request";
+  if (value >= 10000000) return `₹ ${(value / 10000000).toFixed(2)} Cr`;
+  if (value >= 100000) return `₹ ${(value / 100000).toFixed(2)} L`;
+  return `₹ ${new Intl.NumberFormat("en-IN").format(value)}`;
+};
+
+export default function RelatedProperties({ items = properties10 }) {
+  const safeItems = Array.isArray(items) ? items : [];
+  if (!safeItems.length) return null;
+
   return (
     <section className="section-similar-properties tf-spacing-3">
       <div className="tf-container">
@@ -14,147 +27,39 @@ export default function RelatedProperties() {
             <div className="heading-section mb-32">
               <h2 className="title">Similar Properties</h2>
             </div>
-            <div
-              className="swiper style-pagination tf-sw-mobile-1 sw-swiper-992"
-              data-screen={992}
-              data-preview={1}
-              data-space={15}
-            >
-              <div
-                className="swiper-wrapper tf-layout-mobile-xl lg-col-3 wrap-agent wow fadeInUp"
-                data-wow-delay=".2s"
-              >
-                {properties10.map((property) => (
-                  <div className="swiper-slide" key={property.id}>
-                    <div className="box-house hover-img">
-                      <div className="image-wrap">
-                        <Link href={`/property-detail-v1/${property.id}`}>
-                          <Image
-                            className="lazyload"
-                            data-src={property.imageSrc}
-                            alt={property.title}
-                            src={property.imageSrc}
-                            width={property.imageWidth}
-                            height={property.imageHeight}
-                          />
-                        </Link>
-                        <ul className="box-tag flex gap-8">
-                          {property.featured && (
-                            <li className="flat-tag text-4 bg-main fw-6 text_white">
-                              Featured
-                            </li>
-                          )}
-                          {property.forSale && (
-                            <li className="flat-tag text-4 bg-3 fw-6 text_white">
-                              For Sale
-                            </li>
-                          )}
-                        </ul>
-                        <div className="list-btn flex gap-8">
-                          <a href="#" className="btn-icon save hover-tooltip">
-                            <i className="icon-save" />
-                            <span className="tooltip">Add Favorite</span>
-                          </a>
-                          <a href="#" className="btn-icon find hover-tooltip">
-                            <i className="icon-find-plus" />
-                            <span className="tooltip">Quick View</span>
-                          </a>
-                        </div>
-                      </div>
-                      <div className="content">
-                        <h5 className="title">
-                          <Link href={`/property-detail-v1/${property.id}`}>
-                            {property.title}
-                          </Link>
-                        </h5>
-                        <p className="location text-1 flex items-center gap-8">
-                          <i className="icon-location" /> {property.location}
-                        </p>
-                        <ul className="meta-list flex">
-                          <li className="text-1 flex">
-                            <span>{property.beds}</span>Beds
-                          </li>
-                          <li className="text-1 flex">
-                            <span>{property.baths}</span>Baths
-                          </li>
-                          <li className="text-1 flex">
-                            <span>{property.sqft}</span>Sqft
-                          </li>
-                        </ul>
-                        <div className="bot flex justify-between items-center">
-                          <h5 className="price">${property.price}</h5>
-                          <div className="wrap-btn flex">
-                            <a
-                              href="#"
-                              className="compare flex gap-8 items-center text-1"
-                            >
-                              <i className="icon-compare" />
-                              Compare
-                            </a>
-                            <Link
-                              href={`/property-detail-v1/${property.id}`}
-                              className="tf-btn style-border pd-4"
-                            >
-                              Details
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="sw-pagination sw-pagination-mb-1 text-center d-lg-none d-block mt-20" />
-            </div>
+
             <Swiper
               className="swiper style-pagination tf-sw-mobile-1 sw-swiper-992"
               spaceBetween={15}
+              slidesPerView={1}
               modules={[Pagination]}
               pagination={{
                 clickable: true,
-                el: ".spd458",
+                el: ".related-properties-pagination",
+              }}
+              breakpoints={{
+                768: { slidesPerView: 2 },
+                1200: { slidesPerView: 3 },
               }}
             >
-              {properties10.map((property) => (
-                <SwiperSlide className="swiper-slide" key={property.id}>
+              {safeItems.map((property) => (
+                <SwiperSlide key={`related-${property.id}-${property.slug || "item"}`}>
                   <div className="box-house hover-img">
                     <div className="image-wrap">
-                      <Link href={`/property-detail-v1/${property.id}`}>
+                      <Link href={`/property-detail/${property?.slug || property?.id}`}>
                         <Image
                           className="lazyload"
-                          data-src={property.imageSrc}
-                          alt={property.title}
-                          src={property.imageSrc}
-                          width={property.imageWidth}
-                          height={property.imageHeight}
+                          alt={property.title || "Property"}
+                          src={property.imageSrc || "/images/section/box-house.jpg"}
+                          width={property.imageWidth || 600}
+                          height={property.imageHeight || 401}
                         />
                       </Link>
-                      <ul className="box-tag flex gap-8">
-                        {property.featured && (
-                          <li className="flat-tag text-4 bg-main fw-6 text_white">
-                            Featured
-                          </li>
-                        )}
-                        {property.forSale && (
-                          <li className="flat-tag text-4 bg-3 fw-6 text_white">
-                            For Sale
-                          </li>
-                        )}
-                      </ul>
-                      <div className="list-btn flex gap-8">
-                        <a href="#" className="btn-icon save hover-tooltip">
-                          <i className="icon-save" />
-                          <span className="tooltip">Add Favorite</span>
-                        </a>
-                        <a href="#" className="btn-icon find hover-tooltip">
-                          <i className="icon-find-plus" />
-                          <span className="tooltip">Quick View</span>
-                        </a>
-                      </div>
                     </div>
+
                     <div className="content">
                       <h5 className="title">
-                        <Link href={`/property-detail-v1/${property.id}`}>
+                        <Link href={`/property-detail/${property?.slug || property?.id}`}>
                           {property.title}
                         </Link>
                       </h5>
@@ -163,27 +68,20 @@ export default function RelatedProperties() {
                       </p>
                       <ul className="meta-list flex">
                         <li className="text-1 flex">
-                          <span>{property.beds}</span>Beds
+                          <span>{property.beds || "-"}</span>Beds
                         </li>
                         <li className="text-1 flex">
-                          <span>{property.baths}</span>Baths
+                          <span>{property.baths || "-"}</span>Baths
                         </li>
                         <li className="text-1 flex">
-                          <span>{property.sqft}</span>Sqft
+                          <span>{property.sqft || "-"}</span>Sqft
                         </li>
                       </ul>
                       <div className="bot flex justify-between items-center">
-                        <h5 className="price">${property.price}</h5>
+                        <h5 className="price">{formatInr(property.price)}</h5>
                         <div className="wrap-btn flex">
-                          <a
-                            href="#"
-                            className="compare flex gap-8 items-center text-1"
-                          >
-                            <i className="icon-compare" />
-                            Compare
-                          </a>
                           <Link
-                            href={`/property-detail-v1/${property.id}`}
+                            href={`/property-detail/${property?.slug || property?.id}`}
                             className="tf-btn style-border pd-4"
                           >
                             Details
@@ -194,12 +92,13 @@ export default function RelatedProperties() {
                   </div>
                 </SwiperSlide>
               ))}
-
-              <div className="sw-pagination sw-pagination-mb-1 text-center d-lg-none d-block mt-20 spd458" />
             </Swiper>
+
+            <div className="sw-pagination sw-pagination-mb-1 text-center mt-20 related-properties-pagination" />
           </div>
         </div>
       </div>
     </section>
   );
 }
+

@@ -119,7 +119,7 @@ export default function Footer({ logo = "/images/logo/shi_logo_normal.png" }) {
                 </div>
               ))}
 
-              <div className="col-12">
+              <div className="col-12 mt-5">
                 <div className="footer-about-block footer-info-grid">
                   <div className="about-col">
                     <h5 className="title lh-30 mb-10">ABOUT US</h5>

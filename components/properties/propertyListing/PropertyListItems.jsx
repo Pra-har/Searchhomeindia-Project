@@ -1,6 +1,5 @@
 "use client";
 
-import { properties11 } from "@/data/properties";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -15,7 +14,7 @@ import {
 } from "@/utlis/favorites";
 
 export default function PropertyListItems({
-  items = properties11,
+  items = [],
   showItems,
   mode = "listing",
 }) {
@@ -30,6 +29,7 @@ export default function PropertyListItems({
   };
   const isSavedView = mode === "saved";
   const [savedIds, setSavedIds] = useState(new Set());
+  const [sliderEdgeState, setSliderEdgeState] = useState({});
 
   const galleryPool = [
     "/images/section/box-house.jpg",
@@ -62,7 +62,7 @@ export default function PropertyListItems({
   };
 
   const getPropertyDetailUrl = (property) =>
-    property?.url || `/property-detail/${property.id}`;
+    property?.url || `/property-detail/${property?.slug || property?.id}`;
 
   const formatPriceLabel = (value) => {
     if (value === undefined || value === null || value === "") {
@@ -92,7 +92,7 @@ export default function PropertyListItems({
   };
 
   const handleShareAction = async (property) => {
-    const shareUrl = getShareUrl(property.id);
+    const shareUrl = getShareUrl(property?.slug || property?.id);
     const shareText = `${property.title} - ${shareUrl}`;
 
     if (navigator.share) {
@@ -145,9 +145,33 @@ export default function PropertyListItems({
       createFavoritePayload(property, {
         id: propertyId,
         category: property?.forSale ? "Buy" : property?.forRent ? "Rental" : "Others",
-        url: `/property-detail/${property.id}`,
+        url: `/property-detail/${property?.slug || property?.id}`,
       })
     );
+  };
+
+  const updateSliderEdgeState = (sliderKey, swiper) => {
+    if (!sliderKey || !swiper) return;
+
+    const nextState = {
+      isBeginning: swiper.isBeginning,
+      isEnd: swiper.isEnd,
+    };
+
+    setSliderEdgeState((prev) => {
+      const current = prev[sliderKey];
+      if (
+        current &&
+        current.isBeginning === nextState.isBeginning &&
+        current.isEnd === nextState.isEnd
+      ) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [sliderKey]: nextState,
+      };
+    });
   };
 
   const visibleItems =
@@ -157,10 +181,22 @@ export default function PropertyListItems({
     <>
       {visibleItems.map((property, i) => {
         const propertyId = String(property.id);
+        const sliderKey = `${propertyId}-${i}`;
         const isSaved = savedIds.has(propertyId);
         const galleryImages = getGalleryImages(property, i);
-        const sliderPrevClass = `listing-prev-${property.id}`;
-        const sliderNextClass = `listing-next-${property.id}`;
+        const sliderPrevClass = `listing-prev-${property.id}-${i}`;
+        const sliderNextClass = `listing-next-${property.id}-${i}`;
+        const edgeState = sliderEdgeState[sliderKey] || {
+          isBeginning: true,
+          isEnd: galleryImages.length <= 1,
+        };
+        const showSliderButtons = galleryImages.length > 1;
+        const prevButtonClass = `listing-swiper-nav prev ${sliderPrevClass}${
+          edgeState.isBeginning ? " is-disabled" : ""
+        }`;
+        const nextButtonClass = `listing-swiper-nav next ${sliderNextClass}${
+          edgeState.isEnd ? " is-disabled" : ""
+        }`;
         const statusLabel = property.status || "Ongoing";
         const facingLabel = property.facing || "East Facing";
         const floorLabel = property.totalFloors || "1st of 14 Floors";
@@ -192,6 +228,8 @@ export default function PropertyListItems({
                   spaceBetween={0}
                   slidesPerView={1}
                   modules={[Navigation]}
+                  onSwiper={(swiper) => updateSliderEdgeState(sliderKey, swiper)}
+                  onSlideChange={(swiper) => updateSliderEdgeState(sliderKey, swiper)}
                   navigation={{
                     prevEl: `.${sliderPrevClass}`,
                     nextEl: `.${sliderNextClass}`,
@@ -225,12 +263,24 @@ export default function PropertyListItems({
                   <span>{galleryImages.length}</span>
                 </div>
               </Link>
-              <button type="button" className={`listing-swiper-nav prev ${sliderPrevClass}`}>
-                <i className="icon-arrow-left-1" />
-              </button>
-              <button type="button" className={`listing-swiper-nav next ${sliderNextClass}`}>
-                <i className="icon-arrow-right-1" />
-              </button>
+              {showSliderButtons ? (
+                <button
+                  type="button"
+                  className={prevButtonClass}
+                  aria-label="Previous image"
+                >
+                  <i className="icon-arrow-left-1" />
+                </button>
+              ) : null}
+              {showSliderButtons ? (
+                <button
+                  type="button"
+                  className={nextButtonClass}
+                  aria-label="Next image"
+                >
+                  <i className="icon-arrow-right-1" />
+                </button>
+              ) : null}
             </div>
 
             <div className="content">

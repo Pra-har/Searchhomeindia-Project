@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 const getCityFromLocation = (location) => {
@@ -131,7 +130,7 @@ export default function AboutProject({ property }) {
       <div className="about-head">
         <div className="about-title-media">
           <span className="about-thumb">
-            <Image src={projectLogo} alt={`${builder} logo`} width={64} height={64} />
+            <img src={projectLogo} alt={`${builder} logo`} width={64} height={64} loading="lazy" />
           </span>
           <h2 id="project-about-heading" className="wg-title text-11 fw-6 text-color-heading">
             About {projectName}

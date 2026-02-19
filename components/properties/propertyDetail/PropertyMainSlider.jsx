@@ -286,12 +286,16 @@ export default function PropertyMainSlider({ property }) {
         )
       : 0;
   const nextPreviewIndex =
-    visibleLightboxMedia.length > 0
-      ? (lightboxActive + 1) % visibleLightboxMedia.length
-      : 0;
-  const nextPreviewItem = visibleLightboxMedia[nextPreviewIndex];
+    visibleLightboxMedia.length > 0 && lightboxActive < visibleLightboxMedia.length - 1
+      ? lightboxActive + 1
+      : -1;
+  const nextPreviewItem =
+    nextPreviewIndex >= 0 ? visibleLightboxMedia[nextPreviewIndex] : null;
   const isLightboxAtStart = lightboxActive <= 0;
   const isLightboxAtEnd = lightboxActive >= visibleLightboxMedia.length - 1;
+  const hasMultipleHeroImages = heroMedia.length > 1;
+  const isHeroAtStart = safeIndex <= 0;
+  const isHeroAtEnd = safeIndex >= heroMedia.length - 1;
 
   const focusTypeChip = (type) => {
     const node = lightboxTabsRef.current;
@@ -322,11 +326,11 @@ export default function PropertyMainSlider({ property }) {
   }, [mainItem.absoluteIndex, lightboxMedia.length]);
 
   const prevBanner = () => {
-    setActiveIndex((prev) => (prev === 0 ? heroMedia.length - 1 : prev - 1));
+    setActiveIndex((prev) => Math.max(0, prev - 1));
   };
 
   const nextBanner = () => {
-    setActiveIndex((prev) => (prev + 1) % heroMedia.length);
+    setActiveIndex((prev) => Math.min(heroMedia.length - 1, prev + 1));
   };
 
   const scrollLightboxTabs = (direction) => {
@@ -467,22 +471,26 @@ export default function PropertyMainSlider({ property }) {
               </button>
               <span className="main-type">{mainItem.type}</span>
 
-              <button
-                type="button"
-                className="banner-nav prev"
-                onClick={prevBanner}
-                aria-label="Previous banner image"
-              >
-                <ArrowIcon direction="left" />
-              </button>
-              <button
-                type="button"
-                className="banner-nav next"
-                onClick={nextBanner}
-                aria-label="Next banner image"
-              >
-                <ArrowIcon direction="right" />
-              </button>
+              {hasMultipleHeroImages && !isHeroAtStart ? (
+                <button
+                  type="button"
+                  className="banner-nav prev"
+                  onClick={prevBanner}
+                  aria-label="Previous banner image"
+                >
+                  <ArrowIcon direction="left" />
+                </button>
+              ) : null}
+              {hasMultipleHeroImages && !isHeroAtEnd ? (
+                <button
+                  type="button"
+                  className="banner-nav next"
+                  onClick={nextBanner}
+                  aria-label="Next banner image"
+                >
+                  <ArrowIcon direction="right" />
+                </button>
+              ) : null}
 
               <div className="top-actions">
                 <div className="share-menu-wrap" ref={shareMenuRef}>
@@ -760,15 +768,16 @@ export default function PropertyMainSlider({ property }) {
 
             <div className="lightbox-stage">
               <div className="lightbox-gutter">
-                <button
-                  type="button"
-                  className={`lightbox-nav prev${isLightboxAtStart ? " is-disabled" : ""}`}
-                  onClick={() => lightboxSwiperRef.current?.slidePrev()}
-                  aria-label="Previous image"
-                  disabled={isLightboxAtStart}
-                >
-                  <ArrowIcon direction="left" />
-                </button>
+                {visibleLightboxMedia.length > 1 && !isLightboxAtStart ? (
+                  <button
+                    type="button"
+                    className="lightbox-nav prev"
+                    onClick={() => lightboxSwiperRef.current?.slidePrev()}
+                    aria-label="Previous image"
+                  >
+                    <ArrowIcon direction="left" />
+                  </button>
+                ) : null}
               </div>
 
               <div className="lightbox-main">
@@ -827,15 +836,16 @@ export default function PropertyMainSlider({ property }) {
               )}
 
               <div className="lightbox-gutter">
-                <button
-                  type="button"
-                  className={`lightbox-nav next${isLightboxAtEnd ? " is-disabled" : ""}`}
-                  onClick={() => lightboxSwiperRef.current?.slideNext()}
-                  aria-label="Next image"
-                  disabled={isLightboxAtEnd}
-                >
-                  <ArrowIcon direction="right" />
-                </button>
+                {visibleLightboxMedia.length > 1 && !isLightboxAtEnd ? (
+                  <button
+                    type="button"
+                    className="lightbox-nav next"
+                    onClick={() => lightboxSwiperRef.current?.slideNext()}
+                    aria-label="Next image"
+                  >
+                    <ArrowIcon direction="right" />
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>

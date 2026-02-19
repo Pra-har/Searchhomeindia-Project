@@ -6,7 +6,26 @@ import PropertyListItems from "./PropertyListItems";
 import FilterSidebarLeft from "./FilterSidebarLeft";
 import Sidebar from "./Sidebar";
 
-export default function Properties({ defaultGrid = false }) {
+export default function Properties({
+  defaultGrid = false,
+  items = [],
+  pagination = {},
+  title = "Properties in city",
+}) {
+  const formatNumber = (value) => new Intl.NumberFormat("en-IN").format(value);
+  const totalCount = Math.max(0, Number(pagination.totalCount ?? items.length ?? 0));
+  const currentPage = Math.max(1, Number(pagination.currentPage ?? 1));
+  const requestedPageSize = pagination.pageSize ?? pagination.limit ?? items.length ?? 1;
+  const pageSize = Math.max(
+    1,
+    Number(requestedPageSize)
+  );
+  const totalPages = totalCount > 0 ? Math.ceil(totalCount / pageSize) : 1;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+
+  const rangeStart = totalCount > 0 ? (safeCurrentPage - 1) * pageSize + 1 : 0;
+  const rangeEnd = totalCount > 0 ? Math.min(safeCurrentPage * pageSize, totalCount) : 0;
+
   return (
     <>
     <section className="section-property-layout">
@@ -14,7 +33,13 @@ export default function Properties({ defaultGrid = false }) {
         <div className="row">
          <div className="col-12">
             <div className="box-title">
-              <h2>Properties in city</h2>
+              <div className="box-title-left">
+                <h2>{title}</h2>
+                <p className="text-1 listing-results-summary">
+                  Showing {formatNumber(rangeStart)} - {formatNumber(rangeEnd)} of{" "}
+                  {formatNumber(totalCount)}
+                </p>
+              </div>
               <div className="right">
                 <div
                     className="filter-popup"
@@ -116,7 +141,7 @@ export default function Properties({ defaultGrid = false }) {
                   role="tabpanel"
                 >
                   <div className="wrap-list">
-                    <PropertyListItems />
+                    <PropertyListItems items={items} />
                   </div>
                 </div>
               </div>
