@@ -2,9 +2,9 @@ import React from "react";
 // import LayoutHandler from "./LayoutHandler";
 import DropdownSelect from "../../common/DropdownSelect";
 // import PropertyGridItems from "./PropertyGridItems";
-import PropertyListItems from "./PropertyListItems";
+import PropertyListItems from "./PropertyListing";
 import FilterSidebarLeft from "./FilterSidebarLeft";
-import Sidebar from "./Sidebar";
+import Sidebar from "./ListingHomeSidebar";
 
 export default function Properties({
   defaultGrid = false,

@@ -1,4 +1,4 @@
-import BlogsListing from "@/components/blogs/BlogsListing";
+import BlogsListing from "@/components/blogs/bloglisting/BlogsListing";
 import { blogCategories, getBlogCategoryCounts, getBlogListingResult } from "@/data/blogs";
 
 import Breadcumb from "@/components/common/Breadcumb";

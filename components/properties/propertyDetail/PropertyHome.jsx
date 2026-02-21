@@ -1,18 +1,18 @@
 import React from "react";
 import VideoReview from "./VideoReview";
-import ExtraInfo from "./ExtraInfo";
+import ExtraInfo from "./PropertyGlance";
 import AboutProject from "./AboutProject";
-import Features from "./Features";
+import Features from "./PropertyAmenities";
 import ProjectHighlights from "./ProjectHighlights";
 import ProjectConnectivity from "./ProjectConnectivity";
 import AboutBuilder from "./AboutBuilder";
-import Location from "./Location";
-import FloorPlan from "./FloorPlan";
+import Location from "./PropertyLocation";
+import FloorPlan from "./PorpertyFloorPlan";
 // import Attachments from "./Attachments";
 // import VirtualTour from "./VirtualTour";
 // import LoanCalculator from "./LoanCalculator";
 // import Reviews from "./Reviews";
-import Sidebar from "./Sidebar";
+import Sidebar from "./PropertyHomeSidebar";
 
 export default function Details1({ property }) {
   return (

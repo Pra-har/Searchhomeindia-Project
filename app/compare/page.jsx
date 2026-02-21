@@ -2,7 +2,7 @@ import Breadcumb from "@/components/common/Breadcumb";
 
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
-import Compare from "@/components/otherPages/Compare";
+import Compare from "@/components/compareproperty/Compare";
 import { getPropertyListing, getPropertiesByIds } from "@/lib/properties/repository";
 
 import React from "react";

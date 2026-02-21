@@ -1,4 +1,4 @@
-import Package from "@/components/dashboard/Package";
+import Package from "@/components/dashboard/MyPackage";
 import React from "react";
 
 export const metadata = {

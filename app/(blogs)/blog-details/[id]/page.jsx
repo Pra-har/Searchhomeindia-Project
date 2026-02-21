@@ -1,4 +1,4 @@
-import BlogDetail from "@/components/blogs/BlogDetail";
+import BlogDetail from "@/components/blogs/blogdetail/BlogDetail";
 
 import Breadcumb from "@/components/common/Breadcumb";
 

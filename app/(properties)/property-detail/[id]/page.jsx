@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Breadcumb from "@/components/common/Breadcumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
-import Details from "@/components/properties/propertyDetail/Details";
+import Details from "@/components/properties/propertyDetail/PropertyHome";
 import PropertyMainSlider from "@/components/properties/propertyDetail/PropertyMainSlider";
 import PropertyQuickNav from "@/components/properties/propertyDetail/PropertyQuickNav";
 import RelatedProperties from "@/components/properties/propertyDetail/RelatedProperties";

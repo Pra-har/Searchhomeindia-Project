@@ -1,4 +1,4 @@
-import Profile from "@/components/dashboard/Profile";
+import Profile from "@/components/dashboard/MyProfile";
 import React from "react";
 
 export const metadata = {

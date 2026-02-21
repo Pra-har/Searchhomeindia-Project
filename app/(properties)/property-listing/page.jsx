@@ -4,7 +4,7 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 // import FilterTop from "@/components/properties/FilterTop";
 
-import Properties from "@/components/properties/propertyListing/Properties";
+import Properties from "@/components/properties/propertyListing/ListingHome";
 import React from "react";
 import { getPropertyListing } from "@/lib/properties/repository";
 import { getCityBySlug } from "@/utlis/citySearch";

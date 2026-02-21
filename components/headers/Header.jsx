@@ -10,7 +10,7 @@ import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
 import SearchForm from "@/components/common/SearchForm";
 import CityDropdown from "@/components/common/CityDropdown";
-import MobileBottomNav from "@/components/navigation/MobileBottomNav";
+import MobileBottomNav from "@/components/footer/mobilefooter/MobileBottomNav";
 import {
   CITY_CHANGE_EVENT,
   CITY_OPTIONS,

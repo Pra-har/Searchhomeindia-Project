@@ -1,10 +1,9 @@
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
-import Cta from "@/components/otherPages/LoanProcess/Cta";
-import Facts from "@/components/otherPages/LoanProcess/Facts";
-import LoanCalculator from "@/components/otherPages/LoanProcess/LoanCalculator";
-import PageTitle from "@/components/otherPages/LoanProcess/PageTitle";
-import Process from "@/components/otherPages/LoanProcess/Process";
+import Facts from "@/components/homeloan/Facts";
+import LoanCalculator from "@/components/homeloan/LoanCalculator";
+import PageTitle from "@/components/homeloan/PageTitle";
+import Process from "@/components/homeloan/Process";
 import React from "react";
 
 export default function page() {
@@ -17,7 +16,6 @@ export default function page() {
           <Facts />
           <Process />
           <LoanCalculator />
-          
         </div>
         <Footer />
       </div>
