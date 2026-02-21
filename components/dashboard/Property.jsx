@@ -4,13 +4,21 @@ import Link from "next/link";
 import Image from "next/image";
 import DropdownSelect from "../common/DropdownSelect";
 import { properties5 } from "@/data/properties";
+import Breadcumb from "@/components/common/Breadcumb";
 export default function Property() {
   return (
     <div className="main-content w-100">
       <div className="main-content-inner wrap-dashboard-content">
-        <div className="button-show-hide show-mb">
-          <span className="body-1">Show Dashboard</span>
+        <div className="dashboard-breadcrumb-wrap">
+          <Breadcumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Dashboard", href: "/dashboard" },
+              { label: "My Property" },
+            ]}
+          />
         </div>
+        
         <div className="row">
           <div className="col-md-3">
             <form onSubmit={(e) => e.preventDefault()}>
@@ -186,24 +194,9 @@ export default function Property() {
             </ul>
           </div>
         </div>
-        {/* .footer-dashboard */}
-        <div className="footer-dashboard">
-          <p>Copyright © {new Date().getFullYear()} Popty</p>
-          <ul className="list">
-            <li>
-              <a href="#">Privacy</a>
-            </li>
-            <li>
-              <a href="#">Terms</a>
-            </li>
-            <li>
-              <a href="#">Support</a>
-            </li>
-          </ul>
-        </div>
-        {/* .footer-dashboard */}
+       
       </div>
-      <div className="overlay-dashboard" />
+
     </div>
   );
 }

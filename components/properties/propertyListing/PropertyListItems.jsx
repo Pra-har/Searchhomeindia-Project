@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { addCompareProperty } from "@/utlis/compare";
 import {
   FAVORITES_EVENT,
   createFavoritePayload,
@@ -30,6 +32,7 @@ export default function PropertyListItems({
   const isSavedView = mode === "saved";
   const [savedIds, setSavedIds] = useState(new Set());
   const [sliderEdgeState, setSliderEdgeState] = useState({});
+  const router = useRouter();
 
   const galleryPool = [
     "/images/section/box-house.jpg",
@@ -148,6 +151,11 @@ export default function PropertyListItems({
         url: `/property-detail/${property?.slug || property?.id}`,
       })
     );
+  };
+
+  const handleCompareAction = (property) => {
+    addCompareProperty(property, { max: 4 });
+    router.push("/compare");
   };
 
   const updateSliderEdgeState = (sliderKey, swiper) => {
@@ -361,16 +369,17 @@ export default function PropertyListItems({
                 <h5 className="price listing-price">{formatPriceLabel(property.price)}</h5>
                 {isSavedView ? (
                   <div className="wrap-btn flex listing-action-buttons saved-list-actions">
-                    <Link
-                      href="/compare"
+                    <button
+                      type="button"
                       className="tf-btn style-border pd-1"
                       aria-label="Compare property"
+                      onClick={() => handleCompareAction(property)}
                     >
                       <span className="action-icon" aria-hidden="true">
                         <i className="icon-compare" />
                       </span>
                       <span className="action-label">Compare</span>
-                    </Link>
+                    </button>
                     <button
                       type="button"
                       className="tf-btn style-border pd-1"

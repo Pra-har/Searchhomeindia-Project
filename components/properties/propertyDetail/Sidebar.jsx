@@ -32,17 +32,6 @@ export default function Sidebar({ property, showProjectName = true }) {
           />
         </fieldset>
 
-        <fieldset>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Email"
-            name="email"
-            id="email2"
-            required
-          />
-        </fieldset>
-
         <fieldset className="phone">
           <input
             type="text"
@@ -50,6 +39,17 @@ export default function Sidebar({ property, showProjectName = true }) {
             placeholder="Mobile Number"
             name="phone"
             id="phone"
+            required
+          />
+        </fieldset>
+
+         <fieldset>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Email ID"
+            name="email"
+            id="email2"
             required
           />
         </fieldset>

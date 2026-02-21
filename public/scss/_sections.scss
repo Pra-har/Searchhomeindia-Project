@@ -600,7 +600,7 @@
 .breadcrumb {
   @include mixin.d-flex();
   align-items: center;
-  gap: 28px;
+  gap: 15px;
   margin-bottom: 0;
   li {
     a {
@@ -618,8 +618,8 @@
         color: var(--Text);
         font-size: 8px;
         line-height: normal;
-        top: 5px;
-        margin: 0 12.5px 0 11.5px;
+        top: 7px;
+        margin: 0 5px;
       }
     }
   }

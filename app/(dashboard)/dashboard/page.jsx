@@ -1,5 +1,4 @@
 import Dashboard from "@/components/dashboard/Dashboard";
-import Header from "@/components/headers/Header";
 import React from "react";
 
 export const metadata = {

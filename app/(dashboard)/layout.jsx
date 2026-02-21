@@ -1,5 +1,5 @@
-import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/headers/Header";
+import Footer from "@/components/footer/Footer";
 import React from "react";
 
 export const metadata = {
@@ -11,11 +11,9 @@ export default function page({ children }) {
     <>
       <div className="bg-dashboard">
         <div id="wrapper" className="bg-4">
-          <Header parentClass="header dashboard" />
-          <div className="page-layout">
-            <Sidebar />
-            {children}
-          </div>
+          <Header />
+          <div className="page-layout dashboard-layout-no-sidebar">{children}</div>
+          <Footer />
         </div>
       </div>
     </>

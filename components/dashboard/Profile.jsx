@@ -1,13 +1,21 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import Breadcumb from "@/components/common/Breadcumb";
 export default function Profile() {
   return (
-    <div className="main-content style-2">
-      <div className="main-content-inner wrap-dashboard-content-2">
-        <div className="button-show-hide show-mb">
-          <span className="body-1">Show Dashboard</span>
+    <div className="main-content w-100">
+      <div className="main-content-inner wrap-dashboard-content-2 style-2">
+        <div className="dashboard-breadcrumb-wrap">
+          <Breadcumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Dashboard", href: "/dashboard" },
+              { label: "My Profile" },
+            ]}
+          />
         </div>
+        
         <div className="widget-box-2">
           <div className="box">
             <h3 className="title">Account Settings</h3>
@@ -279,24 +287,9 @@ export default function Profile() {
             </a>
           </div>
         </div>
-        {/* .footer-dashboard */}
-        <div className="footer-dashboard">
-          <p>Copyright © {new Date().getFullYear()} Popty</p>
-          <ul className="list">
-            <li>
-              <a href="#">Privacy</a>
-            </li>
-            <li>
-              <a href="#">Terms</a>
-            </li>
-            <li>
-              <a href="#">Support</a>
-            </li>
-          </ul>
-        </div>
-        {/* .footer-dashboard */}
+      
       </div>
-      <div className="overlay-dashboard" />
+
     </div>
   );
 }

@@ -98,6 +98,21 @@ const AUTH_STORAGE_KEYS = [
   "token",
 ];
 
+const DASHBOARD_MENU_LINKS = [
+  { href: "/dashboard", label: "Dashboard", icon: "icon-home" },
+  { href: "/my-profile", label: "My Profile", icon: "icon-user-2" },
+  { href: "/my-package", label: "My Package", icon: "icon-bag" },
+  {
+    href: "/saved-properties?from=dashboard",
+    label: "Saved Properties",
+    icon: "icon-heart-1",
+  },
+  { href: "/my-save-search", label: "My Save Searches", icon: "icon-view" },
+  { href: "/review", label: "Reviews", icon: "icon-star" },
+  { href: "/my-property", label: "My Properties", icon: "icon-office" },
+  { href: "/add-property", label: "Add Property", icon: "icon-find-plus" },
+];
+
 const MOCK_LOGGED_IN_USER = {
   firstName: "Pratham",
 };
@@ -207,22 +222,30 @@ function HeaderUserMenu({ authState, onLogout }) {
       <div className="menu-user">
         {authState.isLoggedIn ? (
           <>
-            <div className="dropdown-user-meta">{authState.firstName || "User"}</div>
-            <Link className="dropdown-item" href="/my-profile">
-              Profile
-            </Link>
-            <Link className="dropdown-item" href="/my-property">
-              My Listings
-            </Link>
+            <div className="dropdown-user-meta">Hi, {authState.firstName || "User"}</div>
+            <div className="dropdown-user-links">
+              {DASHBOARD_MENU_LINKS.map((item) => (
+                <Link
+                  key={`header-user-${item.href}-${item.label}`}
+                  className="dropdown-item with-icon"
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                >
+                  <i className={`item-icon ${item.icon}`} aria-hidden="true" />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
             <button
               type="button"
-              className="dropdown-item"
+              className="dropdown-item with-icon is-danger"
               onClick={() => {
                 onLogout?.();
                 setOpen(false);
               }}
             >
-              Logout
+              <i className="item-icon icon-circle-arrow" aria-hidden="true" />
+              <span>Logout</span>
             </button>
           </>
         ) : (
@@ -275,9 +298,20 @@ function HeaderRightMenu({ authState, onLogout }) {
 }
 
 function HeaderDirectoryOffcanvas({ authState, onLogout }) {
+  const router = useRouter();
+
+  const handleOffcanvasNavigate = (href) => (event) => {
+    event.preventDefault();
+    dismissAllModals();
+    window.setTimeout(() => {
+      router.push(href);
+    }, 120);
+  };
+
   const sideLinks = useMemo(() => {
     return [
       { href: "/add-property", label: "Post Property", icon: "icon-find-plus", category: "property" },
+      { href: "/property-listing", label: "Property Listing", icon: "icon-office", category: "property" },
       { href: "/saved-properties", label: "Saved/Shortlisted", icon: "icon-heart-1", category: "property" },
       { href: "/compare", label: "Compare", icon: "icon-compare", category: "property" },
       { href: "/career", label: "Careers", icon: "icon-bag", category: "company" },
@@ -339,8 +373,7 @@ function HeaderDirectoryOffcanvas({ authState, onLogout }) {
                 <Link 
                   href="/my-profile" 
                   className="btn btn-outline-primary btn-sm"
-                  onClick={dismissAllModals}
-                  data-bs-dismiss="offcanvas"
+                  onClick={handleOffcanvasNavigate("/my-profile")}
                 >
                   Profile
                 </Link>
@@ -374,8 +407,7 @@ function HeaderDirectoryOffcanvas({ authState, onLogout }) {
                       <Link 
                         href={item.href} 
                         className="header-side-link-label"
-                        onClick={dismissAllModals}
-                        data-bs-dismiss="offcanvas"
+                        onClick={handleOffcanvasNavigate(item.href)}
                       >
                         {item.icon && <i className={`${item.icon} me-2`} />}
                         <span>{item.label}</span>

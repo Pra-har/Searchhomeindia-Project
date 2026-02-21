@@ -1,12 +1,20 @@
 import React from "react";
 import Image from "next/image";
+import Breadcumb from "@/components/common/Breadcumb";
 export default function Review() {
   return (
     <div className="main-content w-100">
-      <div className="main-content-inner style-3">
-        <div className="button-show-hide show-mb">
-          <span className="body-1">Show Dashboard</span>
+      <div className="main-content-inner">
+        <div className="dashboard-breadcrumb-wrap">
+          <Breadcumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Dashboard", href: "/dashboard" },
+              { label: "Review" },
+            ]}
+          />
         </div>
+        
         <div className="widget-box-2 mess-box">
           <h3 className="title">Recent Reviews</h3>
           <ul className="list-mess">
@@ -148,24 +156,9 @@ export default function Review() {
             </li>
           </ul>
         </div>
-        {/* .footer-dashboard */}
-        <div className="footer-dashboard">
-          <p>Copyright © {new Date().getFullYear()} Popty</p>
-          <ul className="list">
-            <li>
-              <a href="#">Privacy</a>
-            </li>
-            <li>
-              <a href="#">Terms</a>
-            </li>
-            <li>
-              <a href="#">Support</a>
-            </li>
-          </ul>
-        </div>
-        {/* .footer-dashboard */}
+    
       </div>
-      <div className="overlay-dashboard" />
+
     </div>
   );
 }

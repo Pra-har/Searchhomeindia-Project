@@ -10,11 +10,27 @@ export const metadata = {
   description: "View your saved, shortlisted, and favorite properties by category.",
 };
 
-export default function page() {
+export default function page({ searchParams }) {
+  const fromParam = Array.isArray(searchParams?.from)
+    ? searchParams.from[0]
+    : searchParams?.from;
+  const isFromDashboard = fromParam === "dashboard";
+
+  const breadcrumbItems = isFromDashboard
+    ? [
+        { label: "Home", href: "/" },
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Saved Properties" },
+      ]
+    : [
+        { label: "Home", href: "/" },
+        { label: "Saved Properties" },
+      ];
+
   return (
     <div id="wrapper">
       <Header />
-      <Breadcumb pageName="Saved Properties" />
+      <Breadcumb pageName="Saved Properties" items={breadcrumbItems} />
       <div className="main-content">
         <SavedPropertiesClient />
       </div>

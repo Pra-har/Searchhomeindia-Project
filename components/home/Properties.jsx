@@ -4,9 +4,18 @@ import { properties } from "@/data/properties";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { addCompareProperty } from "@/utlis/compare";
 import SplitTextAnimation from "@/components/common/SplitTextAnimation";
 import { Navigation, Pagination } from "swiper/modules";
 export default function Properties() {
+  const router = useRouter();
+
+  const handleCompareAction = (property) => {
+    addCompareProperty(property, { max: 4 });
+    router.push("/compare");
+  };
+
   return (
     <section className="section-current-properties tf-spacing-1">
       <div className="tf-container">
@@ -105,13 +114,14 @@ export default function Properties() {
                           ${property.price.toLocaleString()}
                         </h5>
                         <div className="wrap-btn flex">
-                          <a
-                            href="#"
-                            className="compare flex gap-8 items-center text-1"
+                          <button
+                            type="button"
+                            className="compare compare-trigger-btn flex gap-8 items-center text-1"
+                            onClick={() => handleCompareAction(property)}
                           >
                             <i className="icon-compare" />
                             Compare
-                          </a>
+                          </button>
                           <Link
                             href={`/property-detail/${property.id}`}
                             className="tf-btn style-border pd-4"

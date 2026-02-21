@@ -1,14 +1,22 @@
-﻿"use client";
+"use client";
 import React from "react";
 import Image from "next/image";
 import DropdownSelect from "../common/DropdownSelect";
+import Breadcumb from "@/components/common/Breadcumb";
 export default function AddProperty() {
   return (
     <div className="main-content w-100">
       <div className="main-content-inner">
-        <div className="button-show-hide show-mb">
-          <span className="body-1">Show Dashboard</span>
+        <div className="dashboard-breadcrumb-wrap">
+          <Breadcumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Dashboard", href: "/dashboard" },
+              { label: "Add Property" },
+            ]}
+          />
         </div>
+        
         <div className="widget-box-2 mb-20">
           <h3 className="title">Upload Media</h3>
           <div className="box-uploadfile text-center">
@@ -621,24 +629,9 @@ export default function AddProperty() {
             Save &amp; Preview
           </a>
         </div>
-        {/* .footer-dashboard */}
-        <div className="footer-dashboard">
-          <p>Copyright Â© {new Date().getFullYear()} Popty</p>
-          <ul className="list">
-            <li>
-              <a href="#">Privacy</a>
-            </li>
-            <li>
-              <a href="#">Terms</a>
-            </li>
-            <li>
-              <a href="#">Support</a>
-            </li>
-          </ul>
-        </div>
-        {/* /.footer-dashboard */}
+       
       </div>
-      <div className="overlay-dashboard" />
+
     </div>
   );
 }

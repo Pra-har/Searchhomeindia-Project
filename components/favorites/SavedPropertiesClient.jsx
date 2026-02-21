@@ -51,7 +51,7 @@ export default function SavedPropertiesClient() {
     <section className="section-saved-properties">
       <div className="tf-container">
         <div className="saved-properties-head">
-          <h1 className="saved-title">Saved / Favourite / Shortlisted Properties</h1>
+          <h1 className="saved-title">Shortlisted Properties</h1>
           <p className="saved-subtitle">
             You have <strong>{savedProperties.length}</strong> saved properties.
           </p>

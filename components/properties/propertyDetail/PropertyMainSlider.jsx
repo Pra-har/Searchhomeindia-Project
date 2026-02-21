@@ -87,6 +87,28 @@ const compactPrice = (value) => {
   return formatInr(value);
 };
 
+const getDummyRating = (property = {}) => {
+  const seed = String(property?.id || property?.slug || property?.title || "shi");
+  const hash = seed.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  const rating = 4.1 + (hash % 8) * 0.1; // 4.1 to 4.8
+  return Math.round(rating * 10) / 10;
+};
+
+const toRatingValue = (property = {}) => {
+  const maybeRating = [
+    property?.rating,
+    property?.projectRating,
+    property?.projectDetails?.rating,
+    property?.projectDetails?.projectRating,
+  ].find((item) => item !== undefined && item !== null && item !== "");
+
+  if (maybeRating === undefined) return getDummyRating(property);
+  const parsed = Number(String(maybeRating).replace(/[^0-9.]/g, ""));
+  if (!Number.isFinite(parsed)) return getDummyRating(property);
+  const clamped = Math.max(0, Math.min(5, parsed));
+  return Math.round(clamped * 10) / 10;
+};
+
 const getGalleryImages = (property) => {
   const mainImage = property?.imageSrc || galleryPool[0];
   const uniquePool = [mainImage, ...galleryPool.filter((img) => img !== mainImage)];
@@ -134,6 +156,7 @@ export default function PropertyMainSlider({ property }) {
   const title = detailData.title;
   const location = detailData.location;
   const basePrice = toNumber(property?.price, 8600000);
+  const ratingValue = toRatingValue(property);
   const configurationsText = detailData.configurations;
 
   const pricing = toInrRange(basePrice);
@@ -432,6 +455,26 @@ export default function PropertyMainSlider({ property }) {
                 See map
               </a>
             </div>
+            <div className="hero-rating">
+              {ratingValue === null ? (
+                <span className="na">Rating: N/A</span>
+              ) : (
+                <>
+                  <div className="stars" aria-label={`Project rating ${ratingValue} out of 5`}>
+                    {Array.from({ length: 5 }, (_, starIndex) => (
+                      <i
+                        key={`hero-rating-${starIndex}`}
+                        className={`icon-star${
+                          starIndex + 1 <= Math.floor(ratingValue) ? " is-filled" : ""
+                        }`}
+                        aria-hidden="true"
+                      />
+                    ))}
+                  </div>
+                  <span className="value">{ratingValue.toFixed(1)} / 5</span>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="right">
@@ -442,6 +485,7 @@ export default function PropertyMainSlider({ property }) {
                 {"\u20B9"} {formatInr(pricing.perSqft)} / sq.ft
               </span>
             </div>
+            
             <p className="hero-emi">
               EMI starts at {"\u20B9"} {formatInr(Math.round(pricing.min / 240))}
             </p>
@@ -500,7 +544,7 @@ export default function PropertyMainSlider({ property }) {
                     onClick={() => setShowShareMenu((prev) => !prev)}
                   >
                     <span className="share-icon-svg" aria-hidden="true">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
                             <circle cx="18" cy="5" r="3"/>
                             <circle cx="6" cy="12" r="3"/>
                             <circle cx="18" cy="19" r="3"/>
@@ -536,7 +580,7 @@ export default function PropertyMainSlider({ property }) {
                   onClick={toggleSavedState}
                   aria-pressed={isSaved}
                 >
-                  <i className="icon-heart-1" />
+                  <i className={`icon-heart-1 ${isSaved ? 'liked' : ''}`} />
                   {isSaved ? "Saved" : "Save"}
                 </button>
               </div>
@@ -594,22 +638,36 @@ export default function PropertyMainSlider({ property }) {
             </div>
             <h5>Are you interested in this property?</h5>
             <p>Request a callback</p>
-
             <form id="request-call-form" onSubmit={(e) => e.preventDefault()}>
               <fieldset>
-                <input type="text" className="form-control" placeholder="Name" required />
+                <input type="text" className="form-control" placeholder="Your Name" required />
               </fieldset>
               <fieldset>
                 <input type="text" className="form-control" placeholder="Mobile Number" required />
               </fieldset>
               <fieldset>
-                <input type="email" className="form-control" placeholder="Email ID (Optional)" />
+                <input type="email" className="form-control" placeholder="Email ID" />
               </fieldset>
               <fieldset>
                 <textarea className="form-control" placeholder="Message" rows={3} />
               </fieldset>
               <button type="submit" className="tf-btn bg-color-primary w-full">
-                Request Call
+                  <svg
+              width={20}
+              height={20}
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18.125 5.625V14.375C18.125 14.8723 17.9275 15.3492 17.5758 15.7008C17.2242 16.0525 16.7473 16.25 16.25 16.25H3.75C3.25272 16.25 2.77581 16.0525 2.42417 15.7008C2.07254 15.3492 1.875 14.8723 1.875 14.375V5.625M18.125 5.625C18.125 5.12772 17.9275 4.65081 17.5758 4.29917C17.2242 3.94754 16.7473 3.75 16.25 3.75H3.75C3.25272 3.75 2.77581 3.94754 2.42417 4.29917C2.07254 4.65081 1.875 5.12772 1.875 5.625M18.125 5.625V5.8275C18.125 6.14762 18.0431 6.46242 17.887 6.74191C17.7309 7.0214 17.5059 7.25628 17.2333 7.42417L10.9833 11.27C10.6877 11.4521 10.3472 11.5485 10 11.5485C9.65275 11.5485 9.31233 11.4521 9.01667 11.27L2.76667 7.425C2.4941 7.25711 2.26906 7.02224 2.11297 6.74275C1.95689 6.46325 1.87496 6.14845 1.875 5.82833V5.625"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Request Call
               </button>
             </form>
           </aside>
@@ -661,7 +719,7 @@ export default function PropertyMainSlider({ property }) {
                 </div>
                 <a href={whatsappLink} target="_blank" rel="noreferrer" className="tool-btn">
                   <span className="share-icon-svg" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
                       <circle cx="18" cy="5" r="3"/>
                       <circle cx="6" cy="12" r="3"/>
                       <circle cx="18" cy="19" r="3"/>
@@ -677,7 +735,7 @@ export default function PropertyMainSlider({ property }) {
                   onClick={toggleSavedState}
                   aria-pressed={isSaved}
                 >
-                  <i className="icon-heart-1" />
+                  <i className={`icon-heart-1 ${isSaved ? 'liked' : ''}`} />
                   {isSaved ? "Saved" : "Save"}
                 </button>
               </div>

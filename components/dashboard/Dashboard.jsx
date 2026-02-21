@@ -4,13 +4,20 @@ import LineChart from "./Chart";
 import Link from "next/link";
 import Image from "next/image";
 import { properties5 } from "@/data/properties";
+import Breadcumb from "@/components/common/Breadcumb";
 export default function Dashboard() {
   return (
     <div className="main-content w-100">
       <div className="main-content-inner">
-        <div className="button-show-hide show-mb">
-          <span className="body-1">Show Dashboard</span>
+        <div className="dashboard-breadcrumb-wrap">
+          <Breadcumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Dashboard", href: "/dashboard" },
+            ]}
+          />
         </div>
+        
         <div className="flat-counter-v2 tf-counter">
           <div className="counter-box">
             <div className="box-icon">
@@ -632,28 +639,8 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-xl-9">
-            {/* .footer-dashboard */}
-            <div className="footer-dashboard">
-              <p>Copyright © {new Date().getFullYear()} Popty</p>
-              <ul className="list">
-                <li>
-                  <a href="#">Privacy</a>
-                </li>
-                <li>
-                  <a href="#">Terms</a>
-                </li>
-                <li>
-                  <a href="#">Support</a>
-                </li>
-              </ul>
-            </div>
-            {/* .footer-dashboard */}
-          </div>
-        </div>
+       
       </div>
-      <div className="overlay-dashboard" />
     </div>
   );
 }
