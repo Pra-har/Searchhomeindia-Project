@@ -11,7 +11,7 @@ export default function Brands({
         <div className="tf-container">
           <div className="row">
             <div className="col-12 wrap-partners">
-              <div className="heading-section text-center mb-48">
+              <div className="heading-section text-center mb-32">
                 <h2 className="title split-text effect-right">
                   <SplitTextAnimation text="Let’s Work Together" />
                 </h2>

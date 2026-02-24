@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FAVORITES_EVENT, getSavedCount } from "@/utlis/favorites";
+import { FAVORITES_EVENT, getSavedCount } from "@/utils/favorites";
 
 export default function FavoritesNavButton() {
   const pathname = usePathname();

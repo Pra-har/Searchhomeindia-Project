@@ -14,7 +14,18 @@ export async function generateMetadata({ searchParams }) {
   return {
     title: `${activeCategory}Blog Listing | Search Homes India`,
     description:
-      "Search Homes India blog listing with real estate news, market trends, investment insights, and buyer guides.",
+      "Search Homes India blog listing with real estate news, market trends, investment insights, and buyer guides for Indian property seekers.",
+    alternates: {
+      canonical: "https://searchhomesindia.com/blog-listing",
+    },
+    openGraph: {
+      title: `${activeCategory}Real Estate Blog | Search Homes India`,
+      description:
+        "Read the latest real estate news, market trends, investment tips and property guides on Search Homes India.",
+      url: "https://searchhomesindia.com/blog-listing",
+      type: "website",
+    },
+    robots: { index: true, follow: true },
   };
 }
 export default async function page({ searchParams }) {

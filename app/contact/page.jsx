@@ -4,8 +4,11 @@ import Header from "@/components/headers/Header";
 import React from "react";
 
 export const metadata = {
-  title: "Contact || Search Homes India Best Real Estate Portal | Buy, Rent, or Sell",
-  description: "Search Homes India Best Real Estate Portal | Buy, Rent, or Sell",
+  title: "Contact Us | Search Homes India",
+  description:
+    "Get in touch with Search Homes India for property queries, listing support, or partnership opportunities. We are here to help you find your dream home.",
+  alternates: { canonical: "https://searchhomesindia.com/contact" },
+  robots: { index: true, follow: true },
 };
 export default function page() {
   return (

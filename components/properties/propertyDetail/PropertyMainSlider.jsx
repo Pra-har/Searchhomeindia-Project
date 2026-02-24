@@ -10,7 +10,7 @@ import {
   isPropertySaved,
   removeFavoriteProperty,
   saveFavoriteProperty,
-} from "@/utlis/favorites";
+} from "@/utils/favorites";
 
 const galleryPool = [
   "/images/section/property-detail-3.jpg",

@@ -10,7 +10,8 @@ import RelatedProperties from "@/components/properties/propertyDetail/RelatedPro
 import {
   getPropertyDetail,
   getRelatedProperties,
-} from "@/lib/properties/repository";
+} from "@/lib/repository";
+import { allProperties } from "@/data/properties";
 
 const toNumber = (value, fallback = 0) => {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -26,6 +27,12 @@ const compactInr = (value) => {
   if (value >= 100000) return `${(value / 100000).toFixed(2)} L`;
   return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(value);
 };
+
+export async function generateStaticParams() {
+  return allProperties.map((property) => ({
+    id: String(property.slug || property.id),
+  }));
+}
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -50,7 +57,7 @@ export async function generateMetadata({ params }) {
   const priceText =
     normalizedPrice > 0 ? ` Starting at \u20B9${compactInr(normalizedPrice)}.` : "";
   const description = `Explore ${title} in ${location}.${priceText} Get floor plans, amenities, location insights, and connect with Search Homes India for site visit and offers.`;
-  const pageUrl = `/property-detail/${identifier}`;
+  const pageUrl = `https://searchhomesindia.com/property-detail/${identifier}`;
   const imageUrl = property?.imageSrc || "/images/logo/favicon.png";
 
   return {
@@ -64,13 +71,13 @@ export async function generateMetadata({ params }) {
       "search homes india",
     ],
     alternates: {
-      canonical: pageUrl,
+      canonical: `https://searchhomesindia.com/property-detail/${identifier}`,
     },
     openGraph: {
       type: "website",
       title: `${title} | Search Homes India`,
       description,
-      url: pageUrl,
+      url: `https://searchhomesindia.com/property-detail/${identifier}`,
       siteName: "Search Homes India",
       images: [
         {

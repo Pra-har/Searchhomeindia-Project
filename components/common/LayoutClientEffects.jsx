@@ -67,7 +67,7 @@ export default function LayoutClientEffects() {
     let mounted = true;
 
     const initWow = async () => {
-      const WOW = await import("@/utlis/wow");
+      const WOW = await import("@/utils/wow");
       if (!mounted) return;
 
       const wow = new WOW.default({

@@ -14,11 +14,11 @@ import {
   readStoredCitySlug,
   resolveCityFromBrowserLocation,
   writeStoredCity,
-} from "@/utlis/citySearch";
+} from "@/utils/citySearch";
 import {
   SEARCH_CATEGORY_FALLBACK,
   SEARCH_CATEGORY_OPTIONS,
-} from "@/utlis/searchCategories";
+} from "@/utils/searchCategories";
 
 const heroSlides = [
   {

@@ -7,11 +7,11 @@ import SplitTextAnimation from "@/components/common/SplitTextAnimation";
 import { Navigation, Pagination } from "swiper/modules";
 export default function Testimonials() {
   return (
-    <div className="section-testimonials tf-spacing-2 pb-0">
-      <div className="tf-container-xxl">
+    <div className="section-testimonials">
+      <div className="tf-container">
         <div className="row">
           <div className="col-12">
-            <div className="heading-section text-center mb-48">
+            <div className="heading-section text-center mb-32">
               <h2 className="title split-text effect-right">
                 <SplitTextAnimation text="What Our Clients Say?" />
               </h2>
@@ -53,7 +53,7 @@ export default function Testimonials() {
             >
               {testimonials2.map((elm, i) => (
                 <SwiperSlide key={i} className="swiper-slide">
-                  <div className="wg-testimonial style-no-boder text-center">
+                  <div className="wg-testimonial text-center">
                     <div className="avatar">
                       <Image alt="" width={200} height={200} src={elm.avatar} />
                     </div>

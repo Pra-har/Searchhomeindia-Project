@@ -1,5 +1,13 @@
 @use "../abstracts/mixin";
 
+.blog-article-item.style-2 {
+        height: 100%;
+        background: #fff;
+        border: 1px solid #ebeff5;
+        border-radius: 16px;
+        padding: 14px;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 .blog-article-item {
     padding-bottom: 31px;
     border-bottom: 1px solid var(--Line);

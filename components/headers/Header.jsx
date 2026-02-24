@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { otherPages, propertyLinks } from "@/data/menu";
-import { dismissAllModals } from "@/lib/utils/navigationHelper";
+import { dismissAllModals } from "@/utils/navigationHelper";
 import FavoritesNavButton from "./FavoritesNavButton";
 import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
@@ -21,11 +21,11 @@ import {
   readStoredCitySource,
   resolveCityFromBrowserLocation,
   writeStoredCity,
-} from "@/utlis/citySearch";
+} from "@/utils/citySearch";
 import {
   SEARCH_CATEGORY_FALLBACK,
   SEARCH_CATEGORY_OPTIONS,
-} from "@/utlis/searchCategories";
+} from "@/utils/searchCategories";
 
 const HEADER_SWAP_SCROLL_Y = 140;
 

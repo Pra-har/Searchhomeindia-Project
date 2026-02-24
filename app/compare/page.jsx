@@ -3,9 +3,17 @@ import Breadcumb from "@/components/common/Breadcumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Compare from "@/components/compareproperty/Compare";
-import { getPropertyListing, getPropertiesByIds } from "@/lib/properties/repository";
+import { getPropertyListing, getPropertiesByIds } from "@/lib/repository";
 
 import React from "react";
+
+export const metadata = {
+  title: "Compare Properties | Search Homes India",
+  description:
+    "Compare multiple properties side by side on Search Homes India. Evaluate price, location, amenities and features to make the best real estate decision.",
+  alternates: { canonical: "https://searchhomesindia.com/compare" },
+  robots: { index: false, follow: true },
+};
 
 const parseIds = (idsValue) => {
   if (!idsValue) return [];

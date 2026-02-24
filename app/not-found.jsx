@@ -6,8 +6,10 @@ import Link from "next/link";
 import React from "react";
 
 export const metadata = {
-  title: "Page Not Found || Search Homes India Best Real Estate Portal | Buy, Rent, or Sell",
-  description: "Search Homes India Best Real Estate Portal | Buy, Rent, or Sell",
+  title: "Page Not Found | Search Homes India",
+  description:
+    "The page you are looking for does not exist. Return to Search Homes India and explore thousands of properties across India.",
+  robots: { index: false, follow: false },
 };
 export default function page() {
   return (

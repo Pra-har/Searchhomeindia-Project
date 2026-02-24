@@ -7,7 +7,7 @@ export default function Process() {
       <div className="tf-container">
         <div className="row">
           <div className="col-12">
-            <div className="heading-section text-center mb-48">
+            <div className="heading-section text-center mb-32">
               <h2
                 className="title wow animate__fadeInUp animate__animated"
                 data-wow-duration="1s"

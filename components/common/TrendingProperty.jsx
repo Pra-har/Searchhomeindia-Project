@@ -95,7 +95,7 @@ export default function TrendingProperty({
                       <p className="ts-price">{item.price}</p>
                       <p className="ts-bhk">{item.bhk}</p>
 
-                      <button className="ts-btn">Contact</button>
+                      <button className="ts-btn">View Details</button>
                     </div>
 
                     <div className="ts-image">

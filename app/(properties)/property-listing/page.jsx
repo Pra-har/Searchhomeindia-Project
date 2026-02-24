@@ -6,14 +6,55 @@ import Header from "@/components/headers/Header";
 
 import Properties from "@/components/properties/propertyListing/ListingHome";
 import React from "react";
-import { getPropertyListing } from "@/lib/properties/repository";
-import { getCityBySlug } from "@/utlis/citySearch";
+import { getPropertyListing } from "@/lib/repository";
+import { getCityBySlug } from "@/utils/citySearch";
 
-export const metadata = {
-  title:
-    "Property List || Search Homes India Best Real Estate Portal | Buy, Rent, or Sell",
-  description: "Search Homes India Best Real Estate Portal | Buy, Rent, or Sell",
-};
+export async function generateMetadata({ searchParams }) {
+  const params = (await searchParams) || {};
+  const citySlug = params.city || "all-india";
+  const intent = params.intent || "all";
+  const cityInfo = getCityBySlug(citySlug);
+  const cityLabel = cityInfo?.label || "India";
+
+  const intentLabel =
+    intent === "buy"
+      ? "Buy"
+      : intent === "rental"
+      ? "Rent"
+      : intent === "pg"
+      ? "PG"
+      : intent === "commercial"
+      ? "Commercial"
+      : "Buy & Rent";
+
+  const title =
+    citySlug === "all-india"
+      ? `Properties to ${intentLabel} Across India | Search Homes India`
+      : `Properties to ${intentLabel} in ${cityLabel} | Search Homes India`;
+
+  const description =
+    citySlug === "all-india"
+      ? `Browse thousands of verified properties across India. Find flats, villas, plots and commercial spaces to ${intentLabel.toLowerCase()} on Search Homes India.`
+      : `Find verified flats, villas, plots and commercial properties to ${intentLabel.toLowerCase()} in ${cityLabel}. Explore the best listings on Search Homes India.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical:
+        citySlug === "all-india"
+          ? "https://searchhomesindia.com/property-listing"
+          : `https://searchhomesindia.com/property-listing?city=${citySlug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+    robots: { index: true, follow: true },
+  };
+}
+
 export default async function Page({ searchParams }) {
   const resolvedSearchParams = await searchParams;
   const listingResponse = await getPropertyListing(resolvedSearchParams || {});

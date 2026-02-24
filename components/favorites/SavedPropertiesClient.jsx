@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   FAVORITES_EVENT,
   getSavedProperties,
-} from "@/utlis/favorites";
+} from "@/utils/favorites";
 import PropertyListItems from "@/components/properties/propertyListing/PropertyListing";
 import PropertyDetailSidebar from "@/components/properties/propertyDetail/PropertyHomeSidebar";
 

@@ -7,7 +7,7 @@ export default function Services() {
         <div className="tf-container">
           <div className="row">
             <div className="col-12">
-              <div className="heading-section text-center mb-48">
+              <div className="heading-section text-center mb-32">
                 <h2 className="title text_white split-text effect-right">
                   <SplitTextAnimation text="Sell Your Home With One Of" />
 

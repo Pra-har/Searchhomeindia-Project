@@ -5,6 +5,7 @@ import Breadcumb from "@/components/common/Breadcumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import {
+  blogCatalog,
   getBlogByIdOrSlug,
   getBlogCategoryCounts,
   getBlogNeighbors,
@@ -13,6 +14,12 @@ import {
 } from "@/data/blogs";
 import { notFound } from "next/navigation";
 import React from "react";
+
+export async function generateStaticParams() {
+  return blogCatalog.map((blog) => ({
+    id: String(blog.slug || blog.id),
+  }));
+}
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -28,12 +35,22 @@ export async function generateMetadata({ params }) {
   return {
     title: `${blog.title} | Search Homes India`,
     description: blog.excerpt || "Latest real estate insights from Search Homes India.",
+    alternates: {
+      canonical: `https://searchhomesindia.com/blog-details/${blog.id || blog.slug}`,
+    },
     openGraph: {
       title: blog.title,
       description: blog.excerpt || "",
       images: blog.image ? [{ url: blog.image }] : [],
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: blog.title,
+      description: blog.excerpt || "Latest real estate insights from Search Homes India.",
+      images: [blog.image || "/images/logo/shi_logo_normal.png"],
+    },
+    robots: { index: true, follow: true },
   };
 }
 

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { dismissAllModals } from "@/lib/utils/navigationHelper";
+import { dismissAllModals } from "@/utils/navigationHelper";
 
 export default function MobileMenu() {
   const pathname = usePathname();

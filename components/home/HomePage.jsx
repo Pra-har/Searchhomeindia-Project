@@ -4,13 +4,15 @@ import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Topbar from "@/components/headers/Topbar";
 import Blogs from "@/components/home/Blogs";
-import Banner from "@/components/home/Banner";
+import AdsBanner from "@/components/home/AdsBanner";
 import Brands from "@/components/common/Brands";
 import Facts from "@/components/home/Facts";
 import HelpCenter from "@/components/home/HelpCenter";
-import HandpickedCategories from "@/components/home/HandpickedCategories";
+import HandpickedProjects from "@/components/home/HandpickedProjects";
+import HighdemandProjects from "@/components/home/HighdemandProjects";
 import Hero from "@/components/home/Hero";
-import Locations from "@/components/home/Locations";
+// import Locations from "@/components/home/Locations";
+import Cities from "@/components/home/Cities";
 import Properties from "@/components/home/Properties";
 import Services from "@/components/home/Services";
 import Testimonials from "@/components/home/Testimonials";
@@ -28,13 +30,14 @@ export default function HomePage({ city = "all-india" }) {
         <Hero city={normalizedCity} />
         <div className="main-content">
           <TrendingProperty />
-          <HandpickedCategories />
+          <HandpickedProjects />
           <Facts city={normalizedCity} />
           <Categories city={normalizedCity} />
           <Properties city={normalizedCity} />
+          <AdsBanner />
+          <HighdemandProjects city={normalizedCity} />
           <HelpCenter />
-          <Locations city={normalizedCity} />
-          <Banner />
+          <Cities/>
           <Testimonials />
           <Brands />
           <Services />

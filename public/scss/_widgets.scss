@@ -3331,6 +3331,12 @@
   }
 }
 
+@media screen and (max-width: 768px) {
+  .progress-wrap {
+    right: 10px;
+    bottom: 85px;
+  }
+}
 .categories-item {
   padding: 30px 24px 24px 24px;
   background-color: var(--White);

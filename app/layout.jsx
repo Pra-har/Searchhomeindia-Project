@@ -5,6 +5,63 @@ import "rc-slider/assets/index.css";
 import LayoutClientEffects from "@/components/common/LayoutClientEffects";
 import Script from "next/script";
 
+export const metadata = {
+  metadataBase: new URL("https://searchhomesindia.com"),
+  title: {
+    default: "Search Homes India | Buy, Rent & Sell Properties Across India",
+    template: "%s | Search Homes India",
+  },
+  description:
+    "Search Homes India - India's trusted real estate portal. Find flats, villas, plots and commercial properties to buy or rent across Mumbai, Delhi, Bangalore, Pune and 100+ cities.",
+  keywords: [
+    "real estate india",
+    "property for sale india",
+    "flats for rent",
+    "buy property india",
+    "search homes india",
+    "property listing",
+    "real estate portal india",
+  ],
+  icons: {
+    icon: "/images/logo/favicon.png",
+    shortcut: "/images/logo/favicon.png",
+    apple: "/images/logo/favicon.png",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Search Homes India",
+    title: "Search Homes India | Buy, Rent & Sell Properties Across India",
+    description:
+      "Find verified flats, villas, plots and commercial properties across 100+ Indian cities. Search Homes India - your trusted real estate portal.",
+    url: "https://searchhomesindia.com",
+    images: [
+      {
+        url: "/images/logo/shi_logo_normal.png",
+        width: 1200,
+        height: 630,
+        alt: "Search Homes India",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Search Homes India | Buy, Rent & Sell Properties Across India",
+    description:
+      "Find verified flats, villas, plots and commercial properties across 100+ Indian cities.",
+    images: ["/images/logo/shi_logo_normal.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
 const HYDRATION_GUARD_SCRIPT = `
   (function () {
     try {

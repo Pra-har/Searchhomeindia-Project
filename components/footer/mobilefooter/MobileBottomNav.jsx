@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { isCityHomePath } from "@/utlis/citySearch";
+import { isCityHomePath } from "@/utils/citySearch";
 
 export default function MobileBottomNav() {
   const pathname = usePathname();

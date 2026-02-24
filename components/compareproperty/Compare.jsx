@@ -12,7 +12,7 @@ import {
   popCompareNotice,
   removeCompareProperty,
   replaceComparedProperties,
-} from "@/utlis/compare";
+} from "@/utils/compare";
 
 const MAX_COMPARE = 4;
 const MIN_COMPARE = 2;

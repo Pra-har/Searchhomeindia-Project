@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { addCompareProperty } from "@/utlis/compare";
+import { addCompareProperty } from "@/utils/compare";
 import {
   FAVORITES_EVENT,
   createFavoritePayload,
   getSavedProperties,
   removeFavoriteProperty,
   saveFavoriteProperty,
-} from "@/utlis/favorites";
+} from "@/utils/favorites";
 
 export default function PropertyListItems({
   items = [],
@@ -425,7 +425,7 @@ export default function PropertyListItems({
                       <span className="action-icon" aria-hidden="true">
                         <i className="icon-phone-1" />
                       </span>
-                      <span className="action-label">Contact Owner</span>
+                      <span className="action-label">View Details</span>
                     </a>
                   </div>
                 )}
