@@ -7,7 +7,7 @@ import ProjectHighlights from "./ProjectHighlights";
 import ProjectConnectivity from "./ProjectConnectivity";
 import AboutBuilder from "./AboutBuilder";
 import Location from "./PropertyLocation";
-import FloorPlan from "./PorpertyFloorPlan";
+import FloorPlan from "./PropertyFloorPlan";
 // import Attachments from "./Attachments";
 // import VirtualTour from "./VirtualTour";
 // import LoanCalculator from "./LoanCalculator";

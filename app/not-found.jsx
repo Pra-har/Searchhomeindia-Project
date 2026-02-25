@@ -1,4 +1,4 @@
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
@@ -11,13 +11,13 @@ export const metadata = {
     "The page you are looking for does not exist. Return to Search Homes India and explore thousands of properties across India.",
   robots: { index: false, follow: false },
 };
-export default function page() {
+export default function NotFoundPage() {
   return (
     <>
       <div id="wrapper">
         <Header />
         <div className="main-content ">
-          <Breadcumb pageName="Page Not found" />
+          <Breadcrumb pageName="Page Not found" />
           <div className="page-content">
             <div className="tf-container tf-spacing-1 pt-0">
               <div className="error-404 text-center">

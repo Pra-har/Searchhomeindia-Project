@@ -1,12 +1,12 @@
 import React from "react";
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 export default function SaveSearch() {
   return (
     <div className="main-content w-100">
       <div className="main-content-inner">
         <div className="dashboard-breadcrumb-wrap">
-          <Breadcumb
+          <Breadcrumb
             items={[
               { label: "Home", href: "/" },
               { label: "Dashboard", href: "/dashboard" },

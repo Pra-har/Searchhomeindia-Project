@@ -7,6 +7,7 @@ const BASE_URL = "https://searchhomesindia.com";
 export default function sitemap() {
   const staticPages = [
     { url: BASE_URL, changeFrequency: "daily", priority: 1.0 },
+    { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/property-listing`, changeFrequency: "daily", priority: 0.9 },
     { url: `${BASE_URL}/blog-listing`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE_URL}/contact`, changeFrequency: "monthly", priority: 0.5 },

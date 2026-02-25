@@ -1,4 +1,4 @@
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Faqs from "@/components/faq/Faqs";
@@ -17,7 +17,7 @@ export default function page() {
     <>
       <div id="wrapper" className="counter-scroll">
         <Header />
-        <Breadcumb pageName="FAQS" />
+        <Breadcrumb pageName="FAQS" />
         <div className="main-content tf-spacing-6 header-fixed">
           <Faqs />
         </div>

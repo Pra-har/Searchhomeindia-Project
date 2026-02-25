@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 const HEAD_OFFICE = {
   companyName: "Search Homes India Pvt Ltd",
@@ -59,7 +59,7 @@ const CITY_OFFICES = [
 export default function Contact() {
   return (
     <>
-      <Breadcumb pageName="Contact" />
+      <Breadcrumb pageName="Contact" />
 
       <section className="section-contact-v3  py-5">
         <div className="tf-container">

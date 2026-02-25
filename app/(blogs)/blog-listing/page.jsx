@@ -1,7 +1,7 @@
 import BlogsListing from "@/components/blogs/bloglisting/BlogsListing";
 import { blogCategories, getBlogCategoryCounts, getBlogListingResult } from "@/data/blogs";
 
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
@@ -28,7 +28,7 @@ export async function generateMetadata({ searchParams }) {
     robots: { index: true, follow: true },
   };
 }
-export default async function page({ searchParams }) {
+export default async function BlogListingPage({ searchParams }) {
   const params = (await searchParams) || {};
   const activeCategory = params.category || "All";
   const query = params.q || "";
@@ -48,7 +48,7 @@ export default async function page({ searchParams }) {
       <div id="wrapper">
         <Header />
         <div className="main-content">
-          <Breadcumb pageName="Blog Listing" />
+          <Breadcrumb pageName="Blog Listing" />
           <BlogsListing
             blogs={listingResult.items}
             categories={blogCategories}

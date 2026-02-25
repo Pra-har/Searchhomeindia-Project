@@ -1,4 +1,4 @@
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import SavedPropertiesClient from "@/components/favorites/SavedPropertiesClient";
@@ -30,7 +30,7 @@ export default function page({ searchParams }) {
   return (
     <div id="wrapper">
       <Header />
-      <Breadcumb pageName="Saved Properties" items={breadcrumbItems} />
+      <Breadcrumb pageName="Saved Properties" items={breadcrumbItems} />
       <div className="main-content">
         <SavedPropertiesClient />
       </div>

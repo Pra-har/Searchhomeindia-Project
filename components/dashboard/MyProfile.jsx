@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 export default function Profile() {
   return (
     <div className="main-content w-100">
       <div className="main-content-inner wrap-dashboard-content-2 style-2">
         <div className="dashboard-breadcrumb-wrap">
-          <Breadcumb
+          <Breadcrumb
             items={[
               { label: "Home", href: "/" },
               { label: "Dashboard", href: "/dashboard" },

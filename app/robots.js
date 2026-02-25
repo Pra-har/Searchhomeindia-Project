@@ -10,7 +10,7 @@ export default function robots() {
           "/my-property/",
           "/my-favorites/",
           "/my-package/",
-          "/my-save-search/",
+          "/my-saved-searches/",
           "/add-property/",
           "/review/",
           "/saved-properties/",

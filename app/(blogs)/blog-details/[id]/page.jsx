@@ -1,6 +1,6 @@
 import BlogDetail from "@/components/blogs/blogdetail/BlogDetail";
 
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
@@ -32,15 +32,19 @@ export async function generateMetadata({ params }) {
     };
   }
 
+  const blogIdentifier = blog.slug || blog.id;
+  const canonicalUrl = `https://searchhomesindia.com/blog-details/${blogIdentifier}`;
+
   return {
     title: `${blog.title} | Search Homes India`,
     description: blog.excerpt || "Latest real estate insights from Search Homes India.",
     alternates: {
-      canonical: `https://searchhomesindia.com/blog-details/${blog.id || blog.slug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title: blog.title,
       description: blog.excerpt || "",
+      url: canonicalUrl,
       images: blog.image ? [{ url: blog.image }] : [],
       type: "article",
     },
@@ -54,7 +58,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function page({ params }) {
+export default async function BlogDetailPage({ params }) {
   const { id } = await params;
 
   const blog = getBlogByIdOrSlug(id);
@@ -70,7 +74,7 @@ export default async function page({ params }) {
       <div id="wrapper">
         <Header />
         <div className="main-content">
-          <Breadcumb
+          <Breadcrumb
             items={[
               { label: "Home", href: "/" },
               { label: "Blog Listing", href: "/blog-listing" },

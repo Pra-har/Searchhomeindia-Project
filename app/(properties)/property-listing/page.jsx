@@ -1,5 +1,5 @@
 
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 // import FilterTop from "@/components/properties/FilterTop";
@@ -13,6 +13,8 @@ export async function generateMetadata({ searchParams }) {
   const params = (await searchParams) || {};
   const citySlug = params.city || "all-india";
   const intent = params.intent || "all";
+  const pageRaw = Array.isArray(params.page) ? params.page[0] : params.page;
+  const pageNumber = Number(pageRaw);
   const cityInfo = getCityBySlug(citySlug);
   const cityLabel = cityInfo?.label || "India";
 
@@ -37,19 +39,33 @@ export async function generateMetadata({ searchParams }) {
       ? `Browse thousands of verified properties across India. Find flats, villas, plots and commercial spaces to ${intentLabel.toLowerCase()} on Search Homes India.`
       : `Find verified flats, villas, plots and commercial properties to ${intentLabel.toLowerCase()} in ${cityLabel}. Explore the best listings on Search Homes India.`;
 
+  const canonicalParams = new URLSearchParams();
+  if (citySlug !== "all-india") canonicalParams.set("city", citySlug);
+  if (intent !== "all") canonicalParams.set("intent", intent);
+  if (Number.isFinite(pageNumber) && pageNumber > 1) {
+    canonicalParams.set("page", String(pageNumber));
+  }
+
+  const canonicalUrl = canonicalParams.toString()
+    ? `https://searchhomesindia.com/property-listing?${canonicalParams.toString()}`
+    : "https://searchhomesindia.com/property-listing";
+
   return {
     title,
     description,
     alternates: {
-      canonical:
-        citySlug === "all-india"
-          ? "https://searchhomesindia.com/property-listing"
-          : `https://searchhomesindia.com/property-listing?city=${citySlug}`,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title,
       description,
+      url: canonicalUrl,
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
     robots: { index: true, follow: true },
   };
@@ -69,7 +85,7 @@ export default async function Page({ searchParams }) {
       <div id="wrapper">
         <Header />
         {/* <FilterTop /> */}
-        <Breadcumb
+        <Breadcrumb
           items={[
             { label: "Home", href: "/" },
             { label: "Property Listing" },

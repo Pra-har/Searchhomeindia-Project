@@ -1,6 +1,6 @@
 ﻿import React from "react";
 import { notFound } from "next/navigation";
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
 import Details from "@/components/properties/propertyDetail/PropertyHome";
@@ -116,7 +116,7 @@ export default async function Page({ params }) {
     description: `Property details for ${property?.title || "listing"} in ${
       property?.location || "Bangalore"
     }.`,
-    url: `/property-detail/${identifier}`,
+    url: `https://searchhomesindia.com/property-detail/${identifier}`,
     image: property?.imageSrc ? [property.imageSrc] : [],
     address: {
       "@type": "PostalAddress",
@@ -145,7 +145,7 @@ export default async function Page({ params }) {
   return (
     <div id="wrapper">
       <Header />
-      <Breadcumb
+      <Breadcrumb
         items={[
           { label: "Home", href: "/" },
           { label: "Property Listing", href: "/property-listing" },

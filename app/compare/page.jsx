@@ -1,4 +1,4 @@
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
@@ -38,7 +38,7 @@ export default async function page({ searchParams }) {
     <>
       <div id="wrapper" className="counter-scroll">
         <Header />
-        <Breadcumb pageName="Compare" />
+        <Breadcrumb pageName="Compare" />
         <div className="main-content">
           <Compare
             suggestions={listingResponse?.items || []}

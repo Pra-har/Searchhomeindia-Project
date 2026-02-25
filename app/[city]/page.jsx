@@ -10,9 +10,27 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { city } = await params;
-  const normalizedSlug = normalizeCitySlug(city);
+  const rawCity = String(city || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+  const normalizedSlug = normalizeCitySlug(rawCity);
   const cityInfo = CITY_OPTIONS.find((c) => c.slug === normalizedSlug);
-  const cityLabel = cityInfo?.label || city;
+  const isValidCity = Boolean(cityInfo && cityInfo.slug !== "all-india");
+
+  if (!isValidCity) {
+    return {
+      title: "City Not Found | Search Homes India",
+      description:
+        "The requested city page is not available. Browse verified properties across India on Search Homes India.",
+      alternates: {
+        canonical: "https://searchhomesindia.com",
+      },
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const cityLabel = cityInfo.label;
 
   const title = `Properties in ${cityLabel} | Buy & Rent Flats, Villas, Plots | Search Homes India`;
   const description = `Looking for property in ${cityLabel}? Browse verified flats, villas, plots and commercial properties to buy or rent in ${cityLabel}. Explore top builders and new launches on Search Homes India.`;
@@ -64,4 +82,3 @@ export default async function CityHomePage({ params }) {
 
   return <HomePage city={normalizedCity} />;
 }
-

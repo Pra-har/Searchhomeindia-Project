@@ -3492,9 +3492,9 @@
 .clip-color-text {
   display: flex;
   justify-content: center;
+  text-align: center;
+  align-items: center;
   div {
-    font-size: 510px;
-    line-height: 538px;
     font-weight: 900;
     background-image: url(../images/page-title/bg-text.jpg);
     background-repeat: repeat;
@@ -3504,7 +3504,29 @@
     width: max-content;
   }
 }
+.clip-color-text div h1{
+  font-size: 130px;
+  line-height: 150px;
+}
 
+@media (max-width: 1350px) {
+  .clip-color-text div h1 {
+    font-size: 80px;
+    line-height: 110px;
+}
+}
+@media (max-width: 900px) {
+  .clip-color-text div h1 {
+    font-size: 60px;
+    line-height: 75px;
+}
+}
+@media (max-width: 500px) {
+  .clip-color-text div h1 {
+    font-size: 47px;
+    line-height: 57px;
+}
+}
 .service-item {
   .icon {
     display: flex;

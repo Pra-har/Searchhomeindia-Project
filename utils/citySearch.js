@@ -120,7 +120,7 @@ export const RESERVED_TOP_LEVEL_ROUTES = new Set([
   "my-package",
   "my-profile",
   "my-property",
-  "my-save-search",
+  "my-saved-searches",
   "property-detail",
   "property-listing",
   "review",

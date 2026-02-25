@@ -4,13 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import DropdownSelect from "../common/DropdownSelect";
 import { properties5 } from "@/data/properties";
-import Breadcumb from "@/components/common/Breadcumb";
+import Breadcrumb from "@/components/common/Breadcrumb";
 export default function Property() {
   return (
     <div className="main-content w-100">
       <div className="main-content-inner wrap-dashboard-content">
         <div className="dashboard-breadcrumb-wrap">
-          <Breadcumb
+          <Breadcrumb
             items={[
               { label: "Home", href: "/" },
               { label: "Dashboard", href: "/dashboard" },

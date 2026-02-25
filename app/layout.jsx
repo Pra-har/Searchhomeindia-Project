@@ -22,6 +22,9 @@ export const metadata = {
     "property listing",
     "real estate portal india",
   ],
+  alternates: {
+    canonical: "https://searchhomesindia.com",
+  },
   icons: {
     icon: "/images/logo/favicon.png",
     shortcut: "/images/logo/favicon.png",
@@ -29,6 +32,7 @@ export const metadata = {
   },
   openGraph: {
     type: "website",
+    locale: "en_IN",
     siteName: "Search Homes India",
     title: "Search Homes India | Buy, Rent & Sell Properties Across India",
     description:
@@ -45,6 +49,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    creator: "@searchhomesindia",
     title: "Search Homes India | Buy, Rent & Sell Properties Across India",
     description:
       "Find verified flats, villas, plots and commercial properties across 100+ Indian cities.",
@@ -60,6 +65,13 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
+};
+
+export const viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 const HYDRATION_GUARD_SCRIPT = `
@@ -121,6 +133,38 @@ const HYDRATION_GUARD_SCRIPT = `
   })();
 `;
 
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  name: "Search Homes India",
+  url: "https://searchhomesindia.com",
+  logo: "https://searchhomesindia.com/images/logo/shi_logo_normal.png",
+  image: "https://searchhomesindia.com/images/logo/shi_logo_normal.png",
+  telephone: "+91-8147267372",
+  email: "contact@searchhomesindia.com",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "No 280, 3rd Floor, 5th Main Rd, 6th Sector, HSR Layout",
+    addressLocality: "Bengaluru",
+    addressRegion: "Karnataka",
+    postalCode: "560102",
+    addressCountry: "IN",
+  },
+  areaServed: ["India"],
+};
+
+const WEBSITE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Search Homes India",
+  url: "https://searchhomesindia.com",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://searchhomesindia.com/property-listing?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -130,6 +174,14 @@ export default function RootLayout({ children }) {
         </Script>
       </head>
       <body className="popup-loader" suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_SCHEMA) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_SCHEMA) }}
+        />
         {children}
         <LayoutClientEffects />
       </body>
