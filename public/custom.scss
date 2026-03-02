@@ -8402,6 +8402,13 @@
       display: flex;
       align-items: center;
       gap: 10px;
+
+      .tf-btn {
+        min-height: 36px;
+        padding: 0 14px;
+        font-size: 14px;
+        line-height: 1.2;
+      }
     }
   }
 
@@ -8457,11 +8464,57 @@
       aspect-ratio: 16 / 10;
       overflow: hidden;
       background: #eef3f9;
+      position: relative;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+      }
+    }
+
+    .compare-card-swiper {
+      width: 100%;
+      height: 100%;
+    }
+
+    .compare-card-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: rgba(15, 39, 71, 0.62);
+      color: #fff;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(19, 98, 162, 0.9);
+      }
+
+      &.prev {
+        left: 10px;
+      }
+
+      &.next {
+        right: 10px;
+      }
+
+      &.swiper-button-disabled {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      i {
+        font-size: 13px;
+        line-height: 1;
       }
     }
 
@@ -8503,7 +8556,10 @@
 
       .tf-btn {
         width: 100%;
-        min-height: 42px;
+        height: 40px;
+        padding: 0 12px;
+        font-size: 14px;
+        line-height: 1.2;
         justify-content: center;
       }
     }
@@ -8609,6 +8665,17 @@
     }
   }
 
+  .compare-config-select {
+    min-height: 36px;
+    border: 1px solid #cfdff0;
+    border-radius: 10px;
+    background: #fff;
+    color: #1f3654;
+    padding: 0 15px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
   .compare-rating-cell {
     display: inline-flex;
     align-items: center;
@@ -8644,7 +8711,7 @@
     align-items: center;
 
     .tf-btn {
-      min-height: 38px;
+      height: 35px;
       padding: 0 12px;
       font-size: 13px;
       font-weight: 600;
@@ -9201,7 +9268,18 @@
 
       .actions {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        gap: 8px;
+
+        .tf-btn {
+          width: 100%;
+          justify-content: center;
+          min-height: 32px;
+          padding: 0 8px;
+          font-size: 11.5px;
+          line-height: 1.1;
+        }
       }
     }
 
@@ -9222,6 +9300,23 @@
 
       .price {
         font-size: 22px;
+      }
+    }
+
+    .compare-property-card .card-actions .tf-btn,
+    .compare-actions-cell .tf-btn,
+    .compare-v2-head .actions .tf-btn {
+      min-height: 34px;
+      font-size: 12px;
+      padding: 0 10px;
+    }
+
+    .compare-property-card .compare-card-nav {
+      width: 28px;
+      height: 28px;
+
+      i {
+        font-size: 12px;
       }
     }
 
@@ -9246,6 +9341,85 @@
           width: 100%;
         }
       }
+    }
+  }
+}
+
+/* About: Media Presence */
+.about-media-presence {
+  .heading-section {
+    .title {
+      margin-bottom: 8px;
+    }
+
+    .text-1 {
+      max-width: 640px;
+      margin: 0 auto;
+      color: #5e6f87;
+    }
+  }
+
+  .media-presence-swiper-wrap {
+    position: relative;
+    padding: 0;
+  }
+
+  .media-presence-swiper {
+    overflow: hidden;
+  }
+
+  .media-source-pill {
+    min-height: 64px;
+    border: 1px solid #d7e3f2;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+
+    &:hover {
+      border-color: #1b6c9f;
+      box-shadow: 0 8px 20px rgba(27, 108, 159, 0.12);
+    }
+  }
+
+  .media-source-logo {
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+  }
+
+  .media-source-name {
+    display: none;
+  }
+
+}
+
+@media (max-width: 991px) {
+  .about-media-presence {
+    .media-source-pill {
+      min-height: 60px;
+      padding: 12px 14px;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  .about-media-presence {
+    .media-source-pill {
+      min-height: 54px;
+      padding: 10px 12px;
+      gap: 8px;
     }
   }
 }

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import { getPropertyDetailAdapter } from "@/components/properties/propertyDetail/propertyDetailAdapter";
 import {
   addCompareProperty,
@@ -125,6 +127,70 @@ const getMapSearchUrl = (property = {}) => {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 };
 
+const getPropertyImages = (property = {}) => {
+  const normalizedImages = [];
+  const appendImage = (value) => {
+    if (!value) return;
+    if (typeof value === "string") {
+      const parsed = value.trim();
+      if (parsed) normalizedImages.push(parsed);
+      return;
+    }
+    if (typeof value === "object") {
+      const src = normalizeText(value?.src, "");
+      if (src) normalizedImages.push(src);
+    }
+  };
+
+  if (Array.isArray(property?.images)) {
+    property.images.forEach(appendImage);
+  }
+
+  if (Array.isArray(property?.mediaGallery)) {
+    property.mediaGallery.forEach((item) => appendImage(item?.src || item));
+  }
+
+  appendImage(property?.imageSrc);
+
+  const unique = Array.from(new Set(normalizedImages.filter(Boolean)));
+  return unique.length ? unique : ["/images/section/box-house.jpg"];
+};
+
+const deriveConfigFallbackId = (property = {}, index = 0) =>
+  normalizeText(property?.id, "property") + `-config-${index + 1}`;
+
+const getConfigurationOptions = (property = {}, details = {}) => {
+  const plans = Array.isArray(property?.bhkPricingPlans)
+    ? property.bhkPricingPlans
+    : Array.isArray(property?.projectDetails?.bhkPricingPlans)
+      ? property.projectDetails.bhkPricingPlans
+      : [];
+
+  if (plans.length) {
+    return plans.map((plan, index) => ({
+      id: normalizeText(plan?.id, deriveConfigFallbackId(property, index)),
+      label: normalizeText(plan?.type || plan?.bhk, `Option ${index + 1}`),
+      configurations: normalizeText(plan?.bhk || plan?.type, details?.configurations),
+      price: normalizeText(plan?.price, ""),
+      carpetArea: normalizeText(plan?.carpetArea, ""),
+      builtUpArea: normalizeText(plan?.builtUpArea || plan?.area, ""),
+      builtUpRange: normalizeText(plan?.area || plan?.builtUpRange, ""),
+    }));
+  }
+
+  return [
+    {
+      id: deriveConfigFallbackId(property, 0),
+      label: normalizeText(details?.configurations, "Configuration"),
+      configurations: normalizeText(details?.configurations),
+      price: "",
+      carpetArea: normalizeText(details?.carpetArea, ""),
+      builtUpArea: normalizeText(details?.builtUpArea, ""),
+      builtUpRange: normalizeText(details?.builtUpRange, ""),
+    },
+  ];
+};
+
 const buildComparisonRows = (detailColumns = []) => [
   {
     key: "projectRating",
@@ -135,12 +201,18 @@ const buildComparisonRows = (detailColumns = []) => [
   {
     key: "priceRange",
     label: "Price Range",
-    values: detailColumns.map((item) => getPriceRange(item?.property)),
+    values: detailColumns.map((item) => item?.selectedConfig?.price || getPriceRange(item?.property)),
+  },
+  {
+    key: "address",
+    label: "Address",
+    values: detailColumns.map((item) => normalizeText(item?.property?.location || item?.details?.location)),
   },
   {
     key: "configurations",
     label: "Configurations",
-    values: detailColumns.map((item) => normalizeText(item?.details?.configurations)),
+    type: "configurations",
+    values: detailColumns.map((item) => normalizeText(item?.selectedConfig?.configurations || item?.details?.configurations)),
   },
   {
     key: "possessionDate",
@@ -161,17 +233,17 @@ const buildComparisonRows = (detailColumns = []) => [
   {
     key: "builtUpRange",
     label: "Sizes (Built-up)",
-    values: detailColumns.map((item) => normalizeText(item?.details?.builtUpRange)),
+    values: detailColumns.map((item) => normalizeText(item?.selectedConfig?.builtUpRange || item?.details?.builtUpRange)),
   },
   {
     key: "carpetArea",
     label: "Carpet Area",
-    values: detailColumns.map((item) => normalizeText(item?.details?.carpetArea)),
+    values: detailColumns.map((item) => normalizeText(item?.selectedConfig?.carpetArea || item?.details?.carpetArea)),
   },
   {
     key: "builtUpArea",
     label: "Built-up Area",
-    values: detailColumns.map((item) => normalizeText(item?.details?.builtUpArea)),
+    values: detailColumns.map((item) => normalizeText(item?.selectedConfig?.builtUpArea || item?.details?.builtUpArea)),
   },
   {
     key: "developmentArea",
@@ -227,6 +299,7 @@ export default function Compare({ suggestions = [], initialSelected = [] }) {
   const [pickerSlot, setPickerSlot] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
+  const [selectedConfigByPropertyId, setSelectedConfigByPropertyId] = useState({});
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -258,17 +331,52 @@ export default function Compare({ suggestions = [], initialSelected = [] }) {
     [selectedProperties]
   );
 
+  useEffect(() => {
+    setSelectedConfigByPropertyId((previous) => {
+      const next = {};
+      selectedProperties.forEach((property) => {
+        const propertyId = String(property?.id || "");
+        if (!propertyId) return;
+        const details = getPropertyDetailAdapter(property);
+        const options = getConfigurationOptions(property, details);
+        const previousSelection = previous[propertyId];
+        next[propertyId] = options.some((item) => item.id === previousSelection)
+          ? previousSelection
+          : options[0]?.id || "";
+      });
+      return next;
+    });
+  }, [selectedProperties]);
+
+  const handleConfigurationChange = (propertyId, optionId) => {
+    if (!propertyId || !optionId) return;
+    setSelectedConfigByPropertyId((previous) => ({
+      ...previous,
+      [propertyId]: optionId,
+    }));
+  };
+
   const detailColumns = useMemo(
     () =>
       compareSlots.map((property, index) => {
         if (!property) return { slotKey: `slot-${index + 1}`, property: null, details: null };
+        const details = getPropertyDetailAdapter(property);
+        const configOptions = getConfigurationOptions(property, details);
+        const propertyId = String(property?.id || "");
+        const activeConfigId =
+          selectedConfigByPropertyId[propertyId] || configOptions[0]?.id || "";
+        const selectedConfig =
+          configOptions.find((item) => item.id === activeConfigId) || configOptions[0] || null;
+
         return {
           slotKey: normalizeText(property?.id, `slot-${index + 1}`),
           property,
-          details: getPropertyDetailAdapter(property),
+          details,
+          configOptions,
+          selectedConfig,
         };
       }),
-    [compareSlots]
+    [compareSlots, selectedConfigByPropertyId]
   );
 
   const helperMessage =
@@ -352,7 +460,7 @@ export default function Compare({ suggestions = [], initialSelected = [] }) {
   }, [pickerOpen]);
 
   return (
-    <section className="section-compare-v2 tf-spacing-7 pt-0">
+    <section className="section-compare-v2">
       <div className="tf-container">
         <div className="compare-v2-head">
           <div className="left">
@@ -394,12 +502,56 @@ export default function Compare({ suggestions = [], initialSelected = [] }) {
                 {property ? (
                   <article className="compare-property-card">
                     <div className="image-wrap">
-                      <Image
-                        src={property.imageSrc || "/images/section/box-house.jpg"}
-                        alt={property.title || "Property image"}
-                        width={430}
-                        height={260}
-                      />
+                      {(() => {
+                        const images = getPropertyImages(property);
+                        const swiperKey = String(property?.id || index);
+                        return (
+                          <>
+                            <Swiper
+                              className="compare-card-swiper"
+                              modules={[Navigation]}
+                              navigation={
+                                images.length > 1
+                                  ? {
+                                      prevEl: `.compare-card-prev-${swiperKey}`,
+                                      nextEl: `.compare-card-next-${swiperKey}`,
+                                    }
+                                  : false
+                              }
+                            >
+                              {images.map((imageSrc, imageIndex) => (
+                                <SwiperSlide key={`${swiperKey}-image-${imageIndex + 1}`}>
+                                  <Image
+                                    src={imageSrc || "/images/section/box-house.jpg"}
+                                    alt={`${property.title || "Property"} image ${imageIndex + 1}`}
+                                    width={430}
+                                    height={260}
+                                  />
+                                </SwiperSlide>
+                              ))}
+                            </Swiper>
+
+                            {images.length > 1 ? (
+                              <>
+                                <button
+                                  type="button"
+                                  className={`compare-card-nav prev compare-card-prev-${swiperKey}`}
+                                  aria-label="Previous image"
+                                >
+                                  <i className="icon-arrow-left" />
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`compare-card-nav next compare-card-next-${swiperKey}`}
+                                  aria-label="Next image"
+                                >
+                                  <i className="icon-arrow-right" />
+                                </button>
+                              </>
+                            ) : null}
+                          </>
+                        );
+                      })()}
                     </div>
                     <div className="content">
                       <h3 className="name line-clamp-1">
@@ -514,6 +666,39 @@ export default function Compare({ suggestions = [], initialSelected = [] }) {
                               <span className="map-fallback">N/A</span>
                             )}
                           </div>
+                        </td>
+                      );
+                    }
+
+                    if (row.type === "configurations") {
+                      const column = detailColumns[index];
+                      const propertyId = String(column?.property?.id || "");
+                      if (!column?.property) {
+                        return <td key={`${row.key}-${index}`}>N/A</td>;
+                      }
+
+                      if ((column?.configOptions || []).length <= 1) {
+                        return <td key={`${row.key}-${index}`}>{value}</td>;
+                      }
+
+                      const activeSelection =
+                        selectedConfigByPropertyId[propertyId] || column?.configOptions?.[0]?.id;
+
+                      return (
+                        <td key={`${row.key}-${index}`}>
+                          <select
+                            className="compare-config-select"
+                            value={activeSelection}
+                            onChange={(event) =>
+                              handleConfigurationChange(propertyId, event.target.value)
+                            }
+                          >
+                            {column.configOptions.map((option) => (
+                              <option key={option.id} value={option.id}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
                         </td>
                       );
                     }

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" viewBox="0 0 240 80">
+  <rect x="2" y="2" width="236" height="76" rx="12" fill="#ffffff" stroke="#d7e3f2" stroke-width="2"/>
+  <rect x="16" y="18" width="44" height="44" rx="10" fill="#d4282a"/>
+  <text x="38" y="46" text-anchor="middle" fill="#ffffff" font-size="12" font-family="Arial" font-weight="700">ND</text>
+  <text x="72" y="48" fill="#0f2747" font-size="24" font-family="Arial" font-weight="700">NDTV</text>
+</svg>

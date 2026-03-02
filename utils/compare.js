@@ -94,6 +94,13 @@ export const createComparePayload = (property = {}, options = {}) => {
         property?.propertyImage?.src,
       "/images/section/box-house.jpg"
     ),
+    images:
+      options?.images ??
+      property?.images ??
+      (Array.isArray(property?.mediaGallery)
+        ? property.mediaGallery.map((item) => item?.src).filter(Boolean)
+        : []),
+    mediaGallery: options?.mediaGallery ?? property?.mediaGallery ?? [],
     price: options?.price ?? property?.price ?? "",
     beds: options?.beds ?? property?.beds ?? "",
     baths: options?.baths ?? property?.baths ?? "",
@@ -122,6 +129,11 @@ export const createComparePayload = (property = {}, options = {}) => {
     projectReraId: options?.projectReraId ?? property?.projectReraId,
     reraId: options?.reraId ?? property?.reraId,
     projectDetails: options?.projectDetails ?? property?.projectDetails ?? {},
+    bhkPricingPlans:
+      options?.bhkPricingPlans ??
+      property?.bhkPricingPlans ??
+      property?.projectDetails?.bhkPricingPlans ??
+      [],
     addedAt: Date.now(),
   };
 };

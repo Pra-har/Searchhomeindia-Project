@@ -1,7 +1,7 @@
 import Breadcrumb from "@/components/common/Breadcrumb";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/headers/Header";
-import SavedPropertiesClient from "@/components/favorites/SavedPropertiesClient";
+import SavedPropertiesClient from "@/components/savedproperty/SavedProperties";
 import React from "react";
 
 export const metadata = {

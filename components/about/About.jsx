@@ -1,6 +1,6 @@
+import React from "react";
 import OdometerComponent from "@/components/common/OdometerComponent";
 import { counterData } from "@/data/facts";
-import React from "react";
 import SplitTextAnimation from "@/components/common/SplitTextAnimation";
 export default function Facts() {
   return (

@@ -1,53 +1,6 @@
-import Breadcrumb from "@/components/common/Breadcrumb";
+import { redirect } from "next/navigation";
 
-import Footer from "@/components/footer/Footer";
-import Header from "@/components/headers/Header";
-import Compare from "@/components/compareproperty/Compare";
-import { getPropertyListing, getPropertiesByIds } from "@/lib/repository";
-
-import React from "react";
-
-export const metadata = {
-  title: "Compare Properties | Search Homes India",
-  description:
-    "Compare multiple properties side by side on Search Homes India. Evaluate price, location, amenities and features to make the best real estate decision.",
-  alternates: { canonical: "https://searchhomesindia.com/compare" },
-  robots: { index: false, follow: true },
-};
-
-const parseIds = (idsValue) => {
-  if (!idsValue) return [];
-  const raw = Array.isArray(idsValue) ? idsValue[0] : idsValue;
-  return String(raw)
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean)
-    .slice(0, 4);
-};
-
-export default async function page({ searchParams }) {
-  const resolvedSearchParams = await searchParams;
-  const preselectedIds = parseIds(resolvedSearchParams?.ids);
-
-  const [listingResponse, preselectedProperties] = await Promise.all([
-    getPropertyListing({ page: 1, pageSize: 20 }),
-    preselectedIds.length ? getPropertiesByIds(preselectedIds, 4) : Promise.resolve([]),
-  ]);
-
-  return (
-    <>
-      <div id="wrapper" className="counter-scroll">
-        <Header />
-        <Breadcrumb pageName="Compare" />
-        <div className="main-content">
-          <Compare
-            suggestions={listingResponse?.items || []}
-            initialSelected={preselectedProperties}
-          />
-          
-        </div>
-        <Footer />
-      </div>
-    </>
-  );
+export default function CompareRedirectPage() {
+  redirect("/compare-properties");
 }
+

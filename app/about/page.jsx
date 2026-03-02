@@ -7,6 +7,9 @@ import Hero from "@/components/about/Hero";
 import Footer from "@/components/footer/Footer";
 import About from "@/components/about/About";
 import WelcomeSection from "@/components/about/WelcomeSection";
+import Agents from "@/components/about/Agents";
+import OurGoals from "@/components/about/OurGoals";
+import MediaPresence from "@/components/about/MediaPresence";
 
 export const metadata = {
   title: "About Us | Search Homes India",
@@ -25,6 +28,9 @@ export default function page() {
         <div className="main-content bg-color-white">
           <About />
           <WelcomeSection />
+          <Agents />
+          <OurGoals />
+          <MediaPresence />
           <AboutGlimpse />
           <Contact />
           <Brands parentClass="section-work-together style-2 tf-spacing-7 pb-0" />

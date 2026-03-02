@@ -23,7 +23,7 @@ export const otherPages = [
   { href: "/home-loan-process", label: "Home Loan Process" },
   { href: "/career", label: "Careers" },
   { href: "/faq", label: "FAQs" },
-  { href: "/compare", label: "Compare" },
+  { href: "/compare-properties", label: "Compare" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 
