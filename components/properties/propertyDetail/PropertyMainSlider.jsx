@@ -70,21 +70,255 @@ const toNumber = (value, fallback = 0) => {
 const formatInr = (value) =>
   new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(value);
 
-const toInrRange = (value) => {
-  const inrValue = value < 100000 ? value * 1000 : value;
-  const maxValue = Math.round(inrValue * 1.35);
-  const perSqft = Math.max(1200, Math.round(inrValue / 1200));
-  return {
-    min: inrValue,
-    max: maxValue,
-    perSqft,
-  };
-};
-
 const compactPrice = (value) => {
   if (value >= 10000000) return `${(value / 10000000).toFixed(2)} Cr`;
   if (value >= 100000) return `${(value / 100000).toFixed(2)} L`;
   return formatInr(value);
+};
+
+const normalizePropertyType = (property = {}) =>
+  String(
+    property?.type ||
+      property?.intent ||
+      property?.meta?.type ||
+      property?.meta?.intent ||
+      property?.projectDetails?.type ||
+      property?.projectDetails?.intent ||
+      ""
+  )
+    .trim()
+    .toLowerCase();
+
+const getHeroActionConfig = (property = {}) => {
+  const type = normalizePropertyType(property);
+  const rawPhone =
+    property?.contactNumber ||
+    property?.phone ||
+    property?.builderPhone ||
+    property?.ownerPhone ||
+    property?.agentPhone ||
+    property?.meta?.contactNumber ||
+    "+918147267372";
+  const phoneDigits = String(rawPhone).replace(/[^\d+]/g, "") || "+918147267372";
+
+  if (type === "pg" || type === "rental") {
+    return {
+      phoneHref: `tel:${phoneDigits}`,
+      primaryLabel: "Contact Owner",
+      secondaryLabel: "View Number",
+      lightboxLabel: "Contact Owner",
+    };
+  }
+
+  if (type === "commercial") {
+    return {
+      phoneHref: `tel:${phoneDigits}`,
+      primaryLabel: "Contact Broker",
+      secondaryLabel: "View Number",
+      lightboxLabel: "Contact Broker",
+    };
+  }
+
+  return {
+    phoneHref: `tel:${phoneDigits}`,
+    primaryLabel: "Contact Developer",
+    secondaryLabel: "View Number",
+    lightboxLabel: "Contact Seller",
+  };
+};
+
+const parseIndianCurrency = (value) => {
+  if (typeof value === "number" && Number.isFinite(value)) return value > 0 ? value : 0;
+  if (typeof value !== "string") return 0;
+
+  const raw = value.toLowerCase().replace(/,/g, "").trim();
+  if (!raw) return 0;
+
+  const crMatch = raw.match(/(\d+(\.\d+)?)\s*cr/);
+  if (crMatch) return Math.round(Number(crMatch[1]) * 10000000);
+
+  const lakhMatch = raw.match(/(\d+(\.\d+)?)\s*(lakh|lac|l)\b/);
+  if (lakhMatch) return Math.round(Number(lakhMatch[1]) * 100000);
+
+  const thousandMatch = raw.match(/(\d+(\.\d+)?)\s*(thousand|k)\b/);
+  if (thousandMatch) return Math.round(Number(thousandMatch[1]) * 1000);
+
+  const parsed = Number(raw.replace(/[^0-9.]/g, ""));
+  if (!Number.isFinite(parsed) || parsed <= 0) return 0;
+  return parsed;
+};
+
+const getPlanPrices = (plans = []) =>
+  (Array.isArray(plans) ? plans : [])
+    .map((plan) => parseIndianCurrency(plan?.price || plan?.rent))
+    .filter((price) => Number.isFinite(price) && price > 0);
+
+const getHeroPriceContext = (property = {}, detailData = {}) => {
+  const meta = property?.meta || {};
+  const type = normalizePropertyType(property);
+  const isMonthly = type === "pg" || type === "rental";
+
+  const planPrices = getPlanPrices(property?.pricingPlans);
+  const minFromPlans = planPrices.length ? Math.min(...planPrices) : 0;
+  const maxFromPlans = planPrices.length ? Math.max(...planPrices) : 0;
+
+  const minCandidate = parseIndianCurrency(
+    property?.minPrice || meta?.minPrice || property?.monthlyRent || meta?.monthlyRent || property?.price
+  );
+  const maxCandidate = parseIndianCurrency(
+    property?.maxPrice || meta?.maxPrice || property?.price
+  );
+
+  let min = minFromPlans || minCandidate || toNumber(property?.price, 8600000);
+  if (min < 0) min = 0;
+  const inferredMax = min > 0 ? Math.round(min * 1.35) : min;
+  const max = maxFromPlans || maxCandidate || inferredMax;
+  const perSqft = Math.max(
+    1200,
+    parseIndianCurrency(meta?.pricePerSqft || detailData?.avgPricePerSqft) || Math.round(Math.max(min, 1) / 1200)
+  );
+
+  const hasRange = max > min;
+  const monthlySuffix = isMonthly ? "/month" : "";
+  const priceDisplay = hasRange
+    ? `\u20B9 ${compactPrice(min)}${monthlySuffix} - ${compactPrice(max)}${monthlySuffix}`
+    : `\u20B9 ${compactPrice(min)}${monthlySuffix}`;
+
+  const securityDeposit = meta?.securityDeposit || property?.securityDeposit || "N/A";
+  const secondaryText = isMonthly
+    ? `Security Deposit ${securityDeposit}`
+    : `\u20B9 ${formatInr(perSqft)} / sq.ft`;
+
+  const availableFrom = meta?.availableFrom || property?.availableFrom || "Immediate";
+  const tertiaryText = isMonthly
+    ? `Available from ${availableFrom}`
+    : `EMI starts at \u20B9 ${formatInr(Math.max(1, Math.round(min / 240)))}`;
+
+  return {
+    min,
+    max,
+    perSqft,
+    type,
+    isMonthly,
+    hasRange,
+    priceDisplay,
+    secondaryText,
+    tertiaryText,
+  };
+};
+
+const getHeroFacts = (property = {}, detailData = {}, pricing = {}) => {
+  const meta = property?.meta || {};
+  const type = normalizePropertyType(property);
+
+  if (type === "pg") {
+    return [
+      {
+        label: "Sharing Type",
+        value: property?.sharingType || meta?.sharingType || "N/A",
+      },
+      {
+        label: "Available From",
+        value: property?.availableFrom || meta?.availableFrom || "N/A",
+      },
+      {
+        label: "Min. Pricing",
+        value:
+          property?.minPrice ||
+          meta?.minPrice ||
+          `\u20B9 ${compactPrice(pricing.min || 0)}/month`,
+      },
+      {
+        label: "Max. Pricing",
+        value:
+          property?.maxPrice ||
+          meta?.maxPrice ||
+          (pricing.max > pricing.min ? `\u20B9 ${compactPrice(pricing.max)}/month` : "N/A"),
+      },
+    ];
+  }
+
+  if (type === "rental") {
+    return [
+      {
+        label: "Apartment/RK Type",
+        value: meta?.apartmentType || property?.bhkType || meta?.bhkType || "N/A",
+      },
+      {
+        label: "Available From",
+        value: property?.availableFrom || meta?.availableFrom || "N/A",
+      },
+      {
+        label: "Security Deposit",
+        value: property?.securityDeposit || meta?.securityDeposit || "N/A",
+      },
+      {
+        label: "Furnished Status",
+        value: property?.furnishingStatus || meta?.furnishingStatus || "N/A",
+      },
+    ];
+  }
+
+  if (type === "commercial") {
+    return [
+      {
+        label: "Sub Type",
+        value: property?.subType || meta?.subType || "N/A",
+      },
+      {
+        label: "Possession",
+        value: property?.possessionStatus || meta?.possessionStatus || "N/A",
+      },
+      {
+        label: "Carpet Area",
+        value: property?.carpetArea || meta?.carpetArea || "N/A",
+      },
+      {
+        label: "Pricing",
+        value: property?.price || meta?.price || "N/A",
+      },
+    ];
+  }
+
+  if (type === "plot") {
+    return [
+      {
+        label: "Plot Type",
+        value: property?.plotType || meta?.plotType || "N/A",
+      },
+      {
+        label: "Dimension",
+        value: property?.plotDimension || meta?.plotDimension || "N/A",
+      },
+      {
+        label: "Plot Area",
+        value: property?.plotArea || meta?.plotArea || "N/A",
+      },
+      {
+        label: "Pricing",
+        value: property?.price || meta?.price || "N/A",
+      },
+    ];
+  }
+
+  return [
+    {
+      label: "Configurations",
+      value: detailData.configurations,
+    },
+    {
+      label: "Possession Starts",
+      value: detailData.possessionDate,
+    },
+    {
+      label: "Avg. Price",
+      value: `\u20B9 ${formatInr(detailData.avgPricePerSqft)} / sq.ft`,
+    },
+    {
+      label: "Sizes (Built-up)",
+      value: detailData.builtUpRange,
+    },
+  ];
 };
 
 const getDummyRating = (property = {}) => {
@@ -155,11 +389,10 @@ export default function PropertyMainSlider({ property }) {
   const detailData = getPropertyDetailAdapter(property);
   const title = detailData.title;
   const location = detailData.location;
-  const basePrice = toNumber(property?.price, 8600000);
   const ratingValue = toRatingValue(property);
-  const configurationsText = detailData.configurations;
-
-  const pricing = toInrRange(basePrice);
+  const pricing = getHeroPriceContext(property, detailData);
+  const heroFacts = getHeroFacts(property, detailData, pricing);
+  const heroActions = getHeroActionConfig(property);
   const mediaItems = sortMediaItemsByType(getMediaItems(property)).map((item, index) => ({
     ...item,
     absoluteIndex: index,
@@ -479,24 +712,19 @@ export default function PropertyMainSlider({ property }) {
 
           <div className="right">
             <div className="hero-price">
-              {"\u20B9"} {compactPrice(pricing.min)} - {compactPrice(pricing.max)}
-              <span>
-                {" "}
-                {"\u20B9"} {formatInr(pricing.perSqft)} / sq.ft
-              </span>
+              {pricing.priceDisplay}
+              <span> {pricing.secondaryText}</span>
             </div>
             
-            <p className="hero-emi">
-              EMI starts at {"\u20B9"} {formatInr(Math.round(pricing.min / 240))}
-            </p>
+            <p className="hero-emi">{pricing.tertiaryText}</p>
             <div className="hero-head-actions">
-              <a href="tel:+918147267372" className="tf-btn bg-color-primary contact-dev-btn">
+              <a href={heroActions.phoneHref} className="tf-btn bg-color-primary contact-dev-btn">
                 <i className="icon-phone-1" />
-                Contact Developer
+                {heroActions.primaryLabel}
               </a>
-              <a href="tel:+918147267372" className="tf-btn style-border head-mini-btn">
+              <a href={heroActions.phoneHref} className="tf-btn style-border head-mini-btn">
                 <i className="icon-view" />
-                View Number
+                {heroActions.secondaryLabel}
               </a>
             </div>
           </div>
@@ -632,7 +860,7 @@ export default function PropertyMainSlider({ property }) {
           <aside className="property-hero-side">
             <div className="side-project-head">
               <h6>{title}</h6>
-              <a href="tel:+918147267372" className="mini-contact-btn">
+              <a href={heroActions.phoneHref} className="mini-contact-btn">
                 Contact
               </a>
             </div>
@@ -674,34 +902,22 @@ export default function PropertyMainSlider({ property }) {
         </div>
 
         <div className="property-hero-facts">
-          <div className="fact-item">
-            <h6>{configurationsText}</h6>
-            <p>Configurations</p>
-          </div>
-          <div className="fact-item">
-            <h6>{detailData.possessionDate}</h6>
-            <p>Possession Starts</p>
-          </div>
-          <div className="fact-item">
-            <h6>
-              {"\u20B9"} {formatInr(detailData.avgPricePerSqft)} / sq.ft
-            </h6>
-            <p>Avg. Price</p>
-          </div>
-          <div className="fact-item">
-            <h6>{detailData.builtUpRange}</h6>
-            <p>Sizes (Built-up)</p>
-          </div>
+          {heroFacts.map((item, index) => (
+            <div className="fact-item" key={`hero-fact-${index}-${item.label}`}>
+              <h6>{item.value}</h6>
+              <p>{item.label}</p>
+            </div>
+          ))}
         </div>
 
         <div className="property-hero-mobile-actions">
-          <a href="tel:+918147267372" className="tf-btn bg-color-primary">
+          <a href={heroActions.phoneHref} className="tf-btn bg-color-primary">
             <i className="icon-phone-1" />
-            Contact Developer
+            {heroActions.primaryLabel}
           </a>
-          <a href="tel:+918147267372" className="tf-btn style-border">
+          <a href={heroActions.phoneHref} className="tf-btn style-border">
             <i className="icon-view" />
-            View Number
+            {heroActions.secondaryLabel}
           </a>
         </div>
       </div>
@@ -713,13 +929,11 @@ export default function PropertyMainSlider({ property }) {
               <div className="toolbar-left">
                 <div className="project">
                   <h6>{title}</h6>
-                  <p>
-                    {"\u20B9"} {compactPrice(pricing.min)} - {compactPrice(pricing.max)}
-                  </p>
+                  <p>{pricing.priceDisplay}</p>
                 </div>
                 <a href={whatsappLink} target="_blank" rel="noreferrer" className="tool-btn">
                   <span className="share-icon-svg" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2">
                       <circle cx="18" cy="5" r="3"/>
                       <circle cx="6" cy="12" r="3"/>
                       <circle cx="18" cy="19" r="3"/>
@@ -751,7 +965,7 @@ export default function PropertyMainSlider({ property }) {
 
               <div className="toolbar-right">
                 <a href="#request-call-form" className="tf-btn bg-color-primary contact-btn">
-                  Contact Sellers
+                  {heroActions.lightboxLabel}
                 </a>
                 <button
                   type="button"

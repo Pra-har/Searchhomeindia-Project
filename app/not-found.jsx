@@ -19,7 +19,7 @@ export default function NotFoundPage() {
         <div className="main-content ">
           <Breadcrumb pageName="Page Not found" />
           <div className="page-content">
-            <div className="tf-container tf-spacing-1 pt-0">
+            <div className="tf-container tf-spacing-1">
               <div className="error-404 text-center">
                 <h1 className="mb-20 title">Oh no... We lost this page</h1>
                 <p className="mb-40">

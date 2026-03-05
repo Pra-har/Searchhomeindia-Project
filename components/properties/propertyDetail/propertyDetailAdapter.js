@@ -12,7 +12,7 @@ const DEFAULT_DETAILS = {
   builtUpRange: "3643 - 4343 sq.ft",
   totalUnits: "250 Units",
   parking: "Yes",
-  facing: "East Facing",
+  facing: "East Facing",   
   totalFloors: "G+2 & G+3 Villas Floors",
   statusType: "Ongoing",
   propertyType: "Farm house",
