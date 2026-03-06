@@ -151,7 +151,7 @@ export default function PropertyQuickNav() {
     const updateTop = () => {
       const headerNode = document.querySelector("header.header");
       const headerHeight = headerNode ? Math.ceil(headerNode.getBoundingClientRect().height) : 82;
-      setStickyTop(Math.max(55, headerHeight - 1));
+      setStickyTop(Math.max(47, headerHeight - 1));
     };
     updateTop();
     window.addEventListener("resize", updateTop);

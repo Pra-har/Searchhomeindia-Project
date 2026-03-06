@@ -107,7 +107,6 @@ const DASHBOARD_MENU_LINKS = [
     label: "Saved Properties",
     icon: "icon-heart-1",
   },
-  { href: "/my-saved-searches", label: "My Save Searches", icon: "icon-view" },
   { href: "/review", label: "Reviews", icon: "icon-star" },
   { href: "/my-property", label: "My Properties", icon: "icon-office" },
   { href: "/add-property", label: "Add Property", icon: "icon-find-plus" },

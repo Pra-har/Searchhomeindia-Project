@@ -1393,10 +1393,7 @@
     }
     .image-wrap {
       max-width: 60% !important;
-      img {
-        width: 100%;
-        object-fit: cover;
-      }
+      
     }
     .counter-item {
       .counter-number {
@@ -1404,6 +1401,11 @@
       }
     }
   }
+
+  .section-box-team .img-1 img {
+        width: 100%;
+        object-fit: cover;
+    }
 
   .box-benefits {
     flex-wrap: wrap;

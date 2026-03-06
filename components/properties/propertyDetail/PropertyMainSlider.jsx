@@ -121,7 +121,7 @@ const getHeroActionConfig = (property = {}) => {
 
   return {
     phoneHref: `tel:${phoneDigits}`,
-    primaryLabel: "Contact Developer",
+    primaryLabel: "Contact Now",
     secondaryLabel: "View Number",
     lightboxLabel: "Contact Seller",
   };
@@ -408,6 +408,8 @@ export default function PropertyMainSlider({ property }) {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("/property-detail");
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [showStickyMobileActions, setShowStickyMobileActions] = useState(false);
+  const [showMobileContactSheet, setShowMobileContactSheet] = useState(false);
   const [lightboxStart, setLightboxStart] = useState(0);
   const [lightboxActive, setLightboxActive] = useState(0);
   const [canScrollTabsLeft, setCanScrollTabsLeft] = useState(false);
@@ -483,6 +485,44 @@ export default function PropertyMainSlider({ property }) {
     };
   }, [lightboxOpen]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const onViewportChange = () => {
+      const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
+      if (!isMobileViewport || lightboxOpen || showMobileContactSheet) {
+        setShowStickyMobileActions(false);
+        return;
+      }
+
+      setShowStickyMobileActions(window.scrollY > 220);
+    };
+
+    onViewportChange();
+    window.addEventListener("scroll", onViewportChange, { passive: true });
+    window.addEventListener("resize", onViewportChange);
+
+    return () => {
+      window.removeEventListener("scroll", onViewportChange);
+      window.removeEventListener("resize", onViewportChange);
+    };
+  }, [lightboxOpen, showMobileContactSheet]);
+
+  useEffect(() => {
+    if (!showMobileContactSheet) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [showMobileContactSheet]);
+
+  useEffect(() => {
+    if (lightboxOpen && showMobileContactSheet) {
+      setShowMobileContactSheet(false);
+    }
+  }, [lightboxOpen, showMobileContactSheet]);
+
   const updateLightboxTabsScrollState = () => {
     const node = lightboxTabsRef.current;
     if (!node) return;
@@ -519,6 +559,15 @@ export default function PropertyMainSlider({ property }) {
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     location
   )}`;
+
+  const whatsappPhoneDigits = String(heroActions.phoneHref || "")
+    .replace(/^tel:/, "")
+    .replace(/[^\d]/g, "");
+  const whatsappContactLink = whatsappPhoneDigits
+    ? `https://wa.me/${whatsappPhoneDigits}?text=${encodeURIComponent(
+        `Hi, I am interested in ${title}`
+      )}`
+    : "#";
 
   const whatsappLink = `https://wa.me/?text=${encodeURIComponent(
     `${title} - ${currentUrl}`
@@ -877,7 +926,7 @@ export default function PropertyMainSlider({ property }) {
                 <input type="email" className="form-control" placeholder="Email ID" />
               </fieldset>
               <fieldset>
-                <textarea className="form-control" placeholder="Message" rows={3} />
+                <textarea className="form-control" placeholder="Tell us your requirement" rows={3} />
               </fieldset>
               <button type="submit" className="tf-btn bg-color-primary w-full">
                   <svg
@@ -910,17 +959,88 @@ export default function PropertyMainSlider({ property }) {
           ))}
         </div>
 
-        <div className="property-hero-mobile-actions">
-          <a href={heroActions.phoneHref} className="tf-btn bg-color-primary">
-            <i className="icon-phone-1" />
-            {heroActions.primaryLabel}
-          </a>
-          <a href={heroActions.phoneHref} className="tf-btn style-border">
-            <i className="icon-view" />
-            {heroActions.secondaryLabel}
-          </a>
+        <div
+          className={`property-hero-mobile-actions ${
+            showStickyMobileActions ? "is-sticky-visible" : "is-sticky-hidden"
+          }`}
+        >
+            <button
+              type="button"
+              className="tf-btn bg-color-primary"
+              onClick={() => setShowMobileContactSheet(true)}
+            >
+              <i className="icon-phone-1" />
+              Get a Callback
+            </button>
+            <a
+              href={whatsappContactLink}
+              target="_blank"
+              rel="noreferrer"
+              className="tf-btn style-border"
+            >
+              <span className="wa-icon-svg" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M20.52 3.48A11.77 11.77 0 0 0 12.1 0C5.57 0 .27 5.3.27 11.83c0 2.09.54 4.13 1.58 5.93L0 24l6.41-1.83a11.8 11.8 0 0 0 5.66 1.44h.01c6.53 0 11.83-5.3 11.83-11.83 0-3.16-1.23-6.13-3.39-8.3Zm-8.43 18.13h-.01a9.9 9.9 0 0 1-5.03-1.37l-.36-.21-3.8 1.08 1.02-3.71-.23-.38a9.84 9.84 0 0 1-1.5-5.19C2.18 6.4 6.57 2 12 2c2.64 0 5.12 1.02 6.98 2.88a9.8 9.8 0 0 1 2.9 6.95c0 5.43-4.4 9.83-9.8 9.83Zm5.4-7.37c-.3-.15-1.75-.86-2.02-.95-.27-.1-.47-.15-.66.15-.2.3-.76.95-.93 1.14-.17.2-.35.22-.65.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.08-.15-.66-1.6-.9-2.2-.24-.57-.49-.5-.66-.5h-.57c-.2 0-.52.08-.8.38-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.2 3.07c.15.2 2.08 3.18 5.04 4.46.7.3 1.25.49 1.68.62.7.22 1.34.19 1.84.12.56-.08 1.75-.71 2-1.39.25-.68.25-1.26.17-1.39-.08-.12-.28-.2-.58-.35Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+              WhatsApp
+            </a>
         </div>
       </div>
+
+      {showMobileContactSheet ? (
+        <div
+          className="property-mobile-contact-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Contact our real estate experts"
+          onClick={() => setShowMobileContactSheet(false)}
+        >
+          <div className="sheet-backdrop" />
+          <div className="sheet-card" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="sheet-close"
+              aria-label="Close contact form"
+              onClick={() => setShowMobileContactSheet(false)}
+            >
+              <i className="icon-X" />
+            </button>
+
+            <h6>Contact our Real Estate Experts</h6>
+            <form
+              className="sheet-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                setShowMobileContactSheet(false);
+              }}
+            >
+              <fieldset>
+                <input type="text" className="form-control" placeholder="Name" required />
+              </fieldset>
+              <fieldset>
+                <input type="email" className="form-control" placeholder="Email ID" required />
+              </fieldset>
+              <div className="sheet-phone-row">
+                <fieldset className="country-code">
+                  <select className="form-control" defaultValue="+91">
+                    <option value="+91">+91</option>
+                  </select>
+                </fieldset>
+                <fieldset>
+                  <input type="text" className="form-control" placeholder="Phone Number" required />
+                </fieldset>
+              </div>
+              <button type="submit" className="tf-btn bg-color-primary w-full">
+                Contact Now
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : null}
 
       {lightboxOpen && (
         <div className="property-hero-lightbox" onClick={() => setLightboxOpen(false)}>
