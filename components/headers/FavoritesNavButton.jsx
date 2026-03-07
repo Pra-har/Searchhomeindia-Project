@@ -43,11 +43,11 @@ export default function FavoritesNavButton() {
     };
   }, []);
 
-  const isActive = pathname === "/saved-properties";
+  const isActive = pathname === "/saved";
 
   return (
     <Link
-      href="/saved-properties"
+      href="/saved"
       className={`favorites-nav-btn${isActive ? " active" : ""}${
         isBump ? " is-bump" : ""
       }`}

@@ -155,7 +155,7 @@ export default function PropertyListItems({
 
   const handleCompareAction = (property) => {
     addCompareProperty(property, { max: 4 });
-    router.push("/compare-properties");
+    router.push("/compare");
   };
 
   const updateSliderEdgeState = (sliderKey, swiper) => {

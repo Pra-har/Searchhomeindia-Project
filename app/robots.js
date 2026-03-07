@@ -11,7 +11,7 @@ export default function robots() {
           "/my-package/",
           "/add-property/",
           "/review/",
-          "/saved-properties/",
+          "/saved/",
         ],
       },
     ],

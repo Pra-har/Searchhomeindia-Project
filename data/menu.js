@@ -23,7 +23,7 @@ export const otherPages = [
   { href: "/home-loan-process", label: "Home Loan Process" },
   { href: "/career", label: "Careers" },
   { href: "/faq", label: "FAQs" },
-  { href: "/compare-properties", label: "Compare" },
+  { href: "/compare", label: "Compare" },
   { href: "/dashboard", label: "Dashboard" },
 ];
 
@@ -188,7 +188,7 @@ export const megaHeaderMenus = {
         { href: "/home-loan-process", label: "Home Loan Assistance" },
         { href: "/homeloan", label: "EMI & Loan Guide" },
         { href: "/contact", label: "Legal & Documentation Support" },
-        { href: "/compare-properties", label: "Compare Properties" },
+        { href: "/compare", label: "Compare Properties" },
       ],
     },
     {

@@ -102,7 +102,7 @@ const DASHBOARD_MENU_LINKS = [
   { href: "/my-profile", label: "My Profile", icon: "icon-user-2" },
   { href: "/my-package", label: "My Package", icon: "icon-bag" },
   {
-    href: "/saved-properties?from=dashboard",
+    href: "/saved?from=dashboard",
     label: "Saved Properties",
     icon: "icon-heart-1",
   },
@@ -321,8 +321,8 @@ function HeaderDirectoryOffcanvas({ authState, onLogout }) {
     return [
       { href: "/add-property", label: "Post Property", icon: "icon-find-plus", category: "property" },
       { href: "/property-listing", label: "Property Listing", icon: "icon-office", category: "property" },
-      { href: "/saved-properties", label: "Saved/Shortlisted", icon: "icon-heart-1", category: "property" },
-      { href: "/compare-properties", label: "Compare", icon: "icon-compare", category: "property" },
+      { href: "/saved", label: "Saved/Shortlisted", icon: "icon-heart-1", category: "property" },
+      { href: "/compare", label: "Compare", icon: "icon-compare", category: "property" },
       { href: "/career", label: "Careers", icon: "icon-bag", category: "company" },
       { href: "/blog-listing", label: "Blog", icon: "icon-circle-arrow", category: "company" },
       { href: "https://redwingsdesign.com/", label: "Home Interiors", icon: "icon-home", category: "services" },

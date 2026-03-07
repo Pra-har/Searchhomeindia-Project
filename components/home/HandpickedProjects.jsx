@@ -118,7 +118,7 @@ export default function HandpickedCategories() {
       },
       { max: 4 }
     );
-    router.push("/compare-properties");
+    router.push("/compare");
   };
 
   return (

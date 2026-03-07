@@ -43,7 +43,7 @@ export default function MobileBottomNav() {
         </span>
       </Link>
 
-      <Link href="/saved-properties" className="nav-item">
+      <Link href="/saved" className="nav-item">
         <i className="icon-heart-1" aria-hidden="true" />
         <span>Favourite</span>
       </Link>

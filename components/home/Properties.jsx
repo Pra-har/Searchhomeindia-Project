@@ -72,7 +72,7 @@ export default function Properties() {
       },
       { max: 4 }
     );
-    router.push("/compare-properties");
+    router.push("/compare");
   };
 
   const getPropertyTypeLabel = (property) => {
