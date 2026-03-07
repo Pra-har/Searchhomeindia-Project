@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import BackToTop from "@/components/common/BackToTop";
-import MobileMenu from "@/components/headers/MobileMenu";
+// import MobileMenu from "@/components/headers/MobileMenu";
 import Login from "@/components/modals/Login";
 import Register from "@/components/modals/Register";
 
@@ -125,7 +125,7 @@ export default function LayoutClientEffects() {
 
   return (
     <>
-      <MobileMenu />
+      {/* <MobileMenu /> */}
       <BackToTop />
       <Login />
       <Register />

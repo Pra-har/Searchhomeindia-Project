@@ -1687,7 +1687,7 @@
 /* left section */
 .ts-info {
   border-radius: 24px 0 0 24px;
-  width: 30%;
+  width: 32%;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -1702,22 +1702,21 @@
 }
 
 .ts-builder {
-  margin-top: 8px;
-  margin-bottom: 20px;
+  margin: 10px 0;
   font-weight: 600;
   color: #000;
 }
 
 .ts-name {
   font-size: 22px;
-  margin-bottom: 6px;
+  // margin-bottom: 6px;
   color: #000;
   line-height: 28px;
 }
 
 .ts-price {
   font-weight: 700;
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 16px;
   color: #000;
 }
@@ -1735,7 +1734,7 @@
 }
 
 .ts-image {
-  width: 70%;
+  width: 68%;
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -1756,7 +1755,10 @@
 
   .ts-builder,
   .ts-price {
-    margin-top: 0;
+    margin: 0;
+  }
+
+  .ts-builder, .ts-location{
     margin-bottom: 10px;
   }
 
@@ -1772,9 +1774,9 @@
     align-items: center;
   }
 
-  .ts-name {
-    margin-bottom: 10px;
-  }
+  // .ts-name {
+  //   margin-bottom: 10px;
+  // }
 
   .ts-btn {
     margin-top: 10px;
@@ -3055,21 +3057,37 @@
 }
 
 .header-system .header-user-inline .header-user-trigger {
-  width: 40px;
+  width: 60px;
   height: 40px;
   border: 1px solid #d8e4f1;
   border-radius: 10px;
   background: #fff;
-  padding: 0;
+  padding: 0 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   color: var(--Primary);
   position: relative;
 }
 
 .header-system .header-user-inline .header-user-trigger>i {
   display: none;
+}
+
+.header-system .header-user-inline .header-user-trigger .header-user-caret {
+  width: 7px;
+  height: 7px;
+  border-right: 1.8px solid #4e6788;
+  border-bottom: 1.8px solid #4e6788;
+  transform: rotate(45deg) translateY(-1px);
+  transition: transform 0.22s ease;
+  flex: none;
+  margin-left: 1px;
+}
+
+.header-system .header-user-inline.active .header-user-trigger .header-user-caret {
+  transform: rotate(-135deg) translateY(-1px);
 }
 
 .header-system .header-user-inline .account-avatar {
@@ -3603,34 +3621,55 @@
 
 .main-menu .navigation>li.simple-mega-menu {
   position: static;
+  cursor: pointer;
 }
 
 .main-menu .navigation>li.simple-mega-menu>.nav-menu-trigger {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 13px 0;
+  position: relative;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 13px 3px;
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
   font-size: 16px;
   line-height: 20px;
   color: var(--Heading);
+  transition: color 0.24s ease, border-color 0.24s ease;
   // font-weight: 500;
 }
 
 .main-menu .navigation>li.simple-mega-menu>.nav-menu-trigger::after {
-  content: "\e902";
-  font-family: "icomoon";
-  font-size: 12px;
-  line-height: 1;
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.8px solid currentColor;
+  border-bottom: 1.8px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+  transition: transform 0.24s ease;
+  flex: none;
 }
 
+
 .main-menu .navigation>li.simple-mega-menu.current-menu>.nav-menu-trigger,
-.main-menu .navigation>li.simple-mega-menu>.nav-menu-trigger:hover,
-.main-menu .navigation>li.simple-mega-menu>.submenu:hover~.nav-menu-trigger {
+.main-menu .navigation>li.simple-mega-menu.is-open>.nav-menu-trigger,
+.main-menu .navigation>li.simple-mega-menu>.nav-menu-trigger:hover {
   color: var(--Primary);
   border-bottom-color: var(--Primary);
+}
+
+.main-menu .navigation>li.simple-mega-menu.is-open>.nav-menu-trigger::after {
+  transform: rotate(-135deg) translateY(-1px);
+}
+
+.main-menu .navigation>li.simple-mega-menu.is-open>.nav-menu-trigger::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) rotate(45deg) scale(1);
+  transition-delay: 0s;
 }
 
 .main-menu .navigation>li.simple-mega-menu>.submenu {
@@ -3638,25 +3677,39 @@
   right: auto;
   top: 100%;
   width: min(1220px, calc(100vw - 34px));
-  max-height: min(72vh, 560px);
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   padding: 20px 22px;
   border-radius: 16px;
-  transform: translateX(-50%) scaleY(0);
+  border: 1px solid #d8e4f1;
+  box-shadow: 0 16px 30px rgba(11, 35, 66, 0.12);
+  transform: translateX(-50%) translateY(12px);
   transform-origin: top center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.24s ease, transform 0.24s ease, visibility 0s linear 0.24s;
   display: grid;
   grid-template-columns: 1.15fr 1fr 1fr 1fr;
+  align-items: start;
   gap: 0;
 }
 
+.main-menu .navigation>li.simple-mega-menu:hover>.submenu {
+  transform: translateX(-50%) translateY(12px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 
-.main-menu .navigation>li.simple-mega-menu>.nav-menu-trigger:hover+.submenu,
-.main-menu .navigation>li.simple-mega-menu>.submenu:hover,
+.main-menu .navigation>li.simple-mega-menu.is-open>.submenu,
+.main-menu .navigation>li.simple-mega-menu.is-open:hover>.submenu,
 .main-menu .navigation>li.simple-mega-menu:focus-within>.submenu {
-  transform: translateX(-50%) scaleY(1);
+  transform: translateX(-50%) translateY(0);
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .main-menu .navigation>li.simple-mega-menu>.submenu>li {
@@ -4414,38 +4467,40 @@
   object-fit: cover;
 }
 
-.hp-badge {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  background: #1b6c9f;
-  color: #fff;
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 700;
-  padding: 6px 8px;
-  border-radius: 4px;
-  z-index: 2;
-}
-
-.hp-fav {
+.hp-actions {
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 40px;
-  height: 40px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hp-action-btn {
+  width: 36px;
+  height: 36px;
   border: none;
   border-radius: 999px;
-  background: rgba(17, 38, 62, 0.55);
+  background: rgba(17, 38, 62, 0.6);
   color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  z-index: 2;
+  transition: all 0.2s ease;
 }
 
-.hp-fav i {
-  font-size: 20px;
+.hp-action-btn i {
+  font-size: 16px;
+}
+
+.hp-action-btn:hover {
+  background: rgba(17, 38, 62, 0.86);
+}
+
+.hp-action-btn.hp-save.is-active {
+  background: #ffe7f1;
+  color: #d14583;
 }
 
 .hp-content {

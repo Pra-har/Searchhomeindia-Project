@@ -70,14 +70,15 @@ export default function TrendingProperty({
             <Swiper
               spaceBetween={30}
               speed={900}
-              autoplay={{ delay: 3000, disableOnInteraction: false }}
+              autoplay={{ delay: 4000, disableOnInteraction: false }}
               navigation={true}
               loop={true}
               modules={[Navigation, Autoplay]}
               className="tp-swiperClass"
               breakpoints={{
                 0: { slidesPerView: 1 },
-                640: { slidesPerView: 1.3 },
+                850: { slidesPerView: 1.1, spaceBetween: 10 },
+                1200: { slidesPerView: 1.3 },
               }}
             >
               {trendingProjects.map((item) => (

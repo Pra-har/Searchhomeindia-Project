@@ -44,8 +44,7 @@ export const megaHeaderMenus = {
         { href: "/property-listing?intent=buy&type=plot", label: "Plots" },
         { href: "/property-listing?intent=buy&type=villa", label: "Villas" },
         { href: "/property-listing?intent=buy&type=commercial", label: "Commercial Properties" },
-      ],
-      footerLink: { href: "/property-listing?intent=buy", label: "Explore all properties" },
+      ]
     },
     {
       title: "Popular Areas",
@@ -168,6 +167,47 @@ export const megaHeaderMenus = {
         { href: "/property-listing?segment=new-launch&tag=rera", label: "RERA approved launches" },
         { href: "/property-listing?segment=new-launch&tag=luxury", label: "Luxury new launches" },
         { href: "/property-listing?segment=new-launch&tag=affordable", label: "Affordable new launches" },
+      ],
+    },
+  ],
+  services: [
+    {
+      title: "Core Services",
+      iconList: true,
+      submenu: [
+        { href: "/our-services", label: "All Services" },
+        { href: "/property-listing?intent=buy", label: "Property Buying Assistance" },
+        { href: "/post-property", label: "Property Selling Assistance" },
+        { href: "/property-listing?intent=rental", label: "Rental Services" },
+        { href: "/property-listing?intent=buy", label: "Investment Consulting" },
+      ],
+    },
+    {
+      title: "Finance & Legal",
+      submenu: [
+        { href: "/home-loan-process", label: "Home Loan Assistance" },
+        { href: "/homeloan", label: "EMI & Loan Guide" },
+        { href: "/contact", label: "Legal & Documentation Support" },
+        { href: "/compare-properties", label: "Compare Properties" },
+      ],
+    },
+    {
+      title: "Post Purchase",
+      submenu: [
+        { href: "https://redwingsdesign.com/", label: "Home Interior & Design" },
+        { href: "/contact", label: "Packers & Movers Assistance" },
+        { href: "/contact", label: "Property Management" },
+        { href: "/contact", label: "Property Valuation" },
+      ],
+    },
+    {
+      title: "Company",
+      submenu: [
+        { href: "/about", label: "About Search Homes India" },
+        { href: "/become-a-partner", label: "Become a Partner" },
+        { href: "/career", label: "Careers" },
+        { href: "/blog-listing", label: "Blogs & Insights" },
+        { href: "/contact", label: "Contact Us" },
       ],
     },
   ],

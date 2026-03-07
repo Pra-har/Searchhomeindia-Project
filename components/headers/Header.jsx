@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { otherPages, propertyLinks } from "@/data/menu";
 import { dismissAllModals } from "@/utils/navigationHelper";
 import FavoritesNavButton from "./FavoritesNavButton";
-import MobileMenu from "./MobileMenu";
+// import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
 import SearchForm from "@/components/common/SearchForm";
 import CityDropdown from "@/components/common/CityDropdown";
@@ -217,6 +216,7 @@ function HeaderUserMenu({ authState, onLogout }) {
           )}
           {authState.isLoggedIn ? <span className="status-dot" /> : null}
         </span>
+        <span className="header-user-caret" aria-hidden="true" />
       </button>
       <div className="menu-user">
         {authState.isLoggedIn ? (
@@ -265,6 +265,16 @@ function HeaderUserMenu({ authState, onLogout }) {
 function HeaderRightMenu({ authState, onLogout }) {
   return (
     <div className="header-right">
+      <button
+        type="button"
+        className="header-mobile-search-trigger"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#header-mobile-search"
+        aria-controls="header-mobile-search"
+        aria-label="Open property search"
+      >
+        <i className="icon-search" />
+      </button>
       <FavoritesNavButton />
       <div className="btn-add">
         <Link className="tf-btn style-border pd-22" href="/add-property">
@@ -695,7 +705,7 @@ export default function Header({ parentClass = "" }) {
           </div>
         </div>
       </div>
-      <MobileMenu />
+      {/* <MobileMenu /> */}
     </header>
   );
 
@@ -771,17 +781,6 @@ export default function Header({ parentClass = "" }) {
                     </div>
 
                     <div className="header-global-center">
-                      <button
-                        type="button"
-                        className="header-mobile-search-trigger"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#header-mobile-search"
-                        aria-controls="header-mobile-search"
-                        aria-label="Open property search"
-                      >
-                        <i className="icon-search" />
-                      </button>
-
                       <div className="header-global-search-desktop">
                         <div className="header-search-select city">
                           <CityDropdown
@@ -843,7 +842,7 @@ export default function Header({ parentClass = "" }) {
         onUseCurrentLocation={onUseCurrentLocation}
       />
       <HeaderDirectoryOffcanvas authState={authState} onLogout={onLogout} />
-      <MobileMenu />
+      {/* <MobileMenu /> */}
     </>
   );
 }

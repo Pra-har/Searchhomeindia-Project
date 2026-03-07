@@ -1,9 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import SplitTextAnimation from "@/components/common/SplitTextAnimation";
+import { useRouter } from "next/navigation";
+import { addCompareProperty } from "@/utils/compare";
+import {
+  getSavedProperties,
+  removeFavoriteProperty,
+  saveFavoriteProperty,
+} from "@/utils/favorites";
 
 const handpickedItems = [
   {
@@ -12,8 +19,9 @@ const handpickedItems = [
     subtitle: "2 BHK Apartment, Sarjapur Road",
     price: "Rs 1.27 - 1.37 Cr",
     image: "/images/section/box-house-15.jpg",
-    badge: "Featured",
     logoText: "II",
+    href: "/property-detail/1",
+    location: "Sarjapur Road, Bengaluru",
   },
   {
     id: 2,
@@ -21,8 +29,9 @@ const handpickedItems = [
     subtitle: "4,5 BHK Independent House/Villa, Varthur",
     price: "Rs 2.88 - 3.68 Cr",
     image: "/images/section/box-house-16.jpg",
-    badge: "Featured",
     logoText: "TA",
+    href: "/property-detail/2",
+    location: "Varthur, Bengaluru",
   },
   {
     id: 3,
@@ -30,8 +39,9 @@ const handpickedItems = [
     subtitle: "3 BHK Apartment, Sarjapur Road",
     price: "Rs 2.38 - 2.42 Cr",
     image: "/images/section/box-house-14.jpg",
-    badge: "Featured",
     logoText: "AM",
+    href: "/property-detail/3",
+    location: "Sarjapur Road, Bengaluru",
   },
   {
     id: 4,
@@ -39,8 +49,9 @@ const handpickedItems = [
     subtitle: "2,3 BHK Apartment, Varthur",
     price: "Rs 1.12 - 1.54 Cr",
     image: "/images/section/box-house-4.jpg",
-    badge: "Featured",
     logoText: "SN",
+    href: "/property-detail/4",
+    location: "Varthur, Bengaluru",
   },
   {
     id: 5,
@@ -48,12 +59,68 @@ const handpickedItems = [
     subtitle: "2,3 BHK Apartment, Whitefield",
     price: "Rs 1.05 - 1.68 Cr",
     image: "/images/section/box-house-3.jpg",
-    badge: "Featured",
     logoText: "PB",
+    href: "/property-detail/5",
+    location: "Whitefield, Bengaluru",
   },
 ];
 
 export default function HandpickedCategories() {
+  const router = useRouter();
+  const [savedIds, setSavedIds] = useState(new Set());
+
+  useEffect(() => {
+    const syncSaved = () => {
+      const ids = new Set(
+        getSavedProperties()
+          .map((item) => String(item?.id || "").trim())
+          .filter(Boolean)
+      );
+      setSavedIds(ids);
+    };
+
+    syncSaved();
+    window.addEventListener("shi:favorites-changed", syncSaved);
+    return () => window.removeEventListener("shi:favorites-changed", syncSaved);
+  }, []);
+
+  const getPropertyId = (item) => String(item?.id ?? "").trim();
+  const isSaved = (item) => savedIds.has(getPropertyId(item));
+
+  const handleSaveToggle = (item) => {
+    const propertyId = getPropertyId(item);
+    if (!propertyId) return;
+
+    if (isSaved(item)) {
+      removeFavoriteProperty(propertyId);
+      return;
+    }
+
+    saveFavoriteProperty({
+      id: propertyId,
+      title: item.title,
+      location: item.location,
+      imageSrc: item.image,
+      priceLabel: item.price,
+      url: item.href,
+    });
+  };
+
+  const handleCompare = (item) => {
+    addCompareProperty(
+      {
+        id: String(item.id),
+        title: item.title,
+        location: item.location,
+        imageSrc: item.image,
+        priceLabel: item.price,
+        url: item.href,
+      },
+      { max: 4 }
+    );
+    router.push("/compare-properties");
+  };
+
   return (
     <section className="handpicked-categories tf-spacing-2 pb-0">
       <div className="tf-container">
@@ -85,10 +152,24 @@ export default function HandpickedCategories() {
                 <article className="hp-card">
                   <div className="hp-media">
                     <img src={item.image} alt={item.title} />
-                    <span className="hp-badge">{item.badge}</span>
-                    <button type="button" className="hp-fav" aria-label="Add to favorites">
-                      <i className="icon-save" />
-                    </button>
+                    <div className="hp-actions">
+                      <button
+                        type="button"
+                        className={`hp-action-btn hp-save ${isSaved(item) ? "is-active" : ""}`}
+                        aria-label={isSaved(item) ? "Remove from saved properties" : "Save property"}
+                        onClick={() => handleSaveToggle(item)}
+                      >
+                        <i className="icon-heart-1" />
+                      </button>
+                      <button
+                        type="button"
+                        className="hp-action-btn hp-compare"
+                        aria-label="Compare property"
+                        onClick={() => handleCompare(item)}
+                      >
+                        <i className="icon-compare" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="hp-content">
